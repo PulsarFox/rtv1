@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/27 14:41:26 by savincen          #+#    #+#             */
-/*   Updated: 2017/04/13 20:06:13 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/04 18:04:02 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,36 +67,16 @@ static t_obj	*get_camera(t_obj *obj, t_env *e, t_calc *v)
 	return (cam);
 }
 
-static t_obj	*get_light(t_obj *obj)
-{
-	t_obj *light;
-
-	light = obj;
-	while (light)
-	{
-		if (light->obj_type == LIGHT)
-		{
-			light->color[0] = 1;
-			light->color[1] = 1;
-			light->color[2] = 1;
-			break;
-		}
-		light = light->next;
-	}
-	return (light);
-}
 
 void	raytracer(t_env *e, t_calc *v, t_obj *obj)
 {
 	int		x;
 	int		y;
 	int		index;
-	t_obj	*light;
 	t_obj	*cam;
 
 	y = 0;
 	cam = get_camera(obj, e, v);
-	light = get_light(obj);
 	while (y < e->height)
 	{
 		x = 0;
@@ -104,7 +84,7 @@ void	raytracer(t_env *e, t_calc *v, t_obj *obj)
 		{
 			v->t = 0;
 			pos_calc(x, y, v, cam);
-			check_primitives(obj, light, cam, v);
+			check_primitives(obj, cam, v);
 			index = (e->bpp / 8) * x + (y * e->s_l);
 			e->data[index] = v->blue;
 			e->data[++index] = v->green;

@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 14:40:49 by savincen          #+#    #+#             */
-/*   Updated: 2017/04/13 19:53:21 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/04 15:19:14 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,9 @@ static void		read_color(char *line, t_obj *obj, char **conf)
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->color[0] = ft_atoi(conf[0]);
+		obj->color[2] = ft_atoi(conf[0]);
 		obj->color[1] = ft_atoi(conf[1]);
-		obj->color[2] = ft_atoi(conf[2]);
+		obj->color[0] = ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}

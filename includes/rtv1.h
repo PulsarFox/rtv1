@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 18:35:53 by savincen          #+#    #+#             */
-/*   Updated: 2017/04/13 20:09:16 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/04 18:13:18 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct		s_calc
 	double			pix_origin_z;
 	double			xind;
 	double			yind;
+	double			theta;
 }					t_calc;
 
 typedef struct		s_obj
@@ -90,13 +91,17 @@ int		check_sphere(t_obj *cam, t_calc *v, t_obj *coord);
 int		check_plan(t_obj *cam, t_calc *v, t_obj *coord);
 int		check_cylinder(t_obj *cam, t_calc *v, t_obj *coord);
 int		check_cone(t_obj *cam, t_calc *v, t_obj *coord);
-void	check_primitives(t_obj *obj, t_obj *light, t_obj *cam,  t_calc *v);
+void	check_primitives(t_obj *obj, t_obj *cam,  t_calc *v);
 void	get_impact(t_calc *v, t_obj *cam);
 void	init_light(t_obj *light);
 int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_obj *cam);
-void	calc_norm(t_obj *cam, t_calc *v, t_obj *obj);
+void	calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj);
+void	calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj);
+void	calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj);
 void	parser(int fd, t_obj **obj);
 void	free_list_obj(t_obj *obj);
+void	calc_shadow(t_obj *cam, t_obj *light, t_calc *v, t_obj *current);
+void	set_color(t_calc *v, double i);
 /*
 ** CHECKERS
 */

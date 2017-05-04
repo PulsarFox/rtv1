@@ -14,7 +14,7 @@ static void		calc_cylinder(t_obj *obj, t_obj *cam, t_calc *v)
 		v->det = pow(v->b, 2) - (4 * v->a * v->c);
 }
 
-static void		calc_norm(t_obj *cam, t_calc *v, t_obj *obj)
+void		calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj)
 {
 	double	x;
 	double	y;
@@ -52,7 +52,6 @@ int		check_cylinder(t_obj *cam, t_calc *v, t_obj *obj)
 		if (v->t <= dist && v->t > 0.00000001)
 			return (1);
 		v->t = dist;
-		calc_norm(cam, v, obj);
 	}
 	return (1);
 }

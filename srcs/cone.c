@@ -20,7 +20,7 @@ void		calc_cone(t_obj *cam, t_calc *v, t_obj *obj)
 		v->det = pow(v->b, 2) - (4 * v->a * v->c);
 }
 
-static void		calc_norm(t_obj *cam, t_calc *v, t_obj *obj)
+void		calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj)
 {
 	double	x;
 	double	y;
@@ -58,7 +58,6 @@ int		check_cone(t_obj *cam, t_calc *v, t_obj *obj)
 		if (v->t <= dist && v->t > 0.00000001)
 			return (1);
 		v->t = dist;
-		calc_norm(cam, v, obj);
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/27 14:19:32 by savincen          #+#    #+#             */
-/*   Updated: 2017/04/13 19:55:39 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/04 18:26:19 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void		check_primitives(t_obj *obj, t_obj *light, t_obj *cam, t_calc *v)
+void		check_primitives(t_obj *obj, t_obj *cam, t_calc *v)
 {
 	t_obj *tmp;
 	t_obj *closer;
+	t_obj *light;
 	double	dist;
 
 	dist = 20000;
+	light = obj;
 	tmp = obj;
 	closer = NULL;
 	while (tmp)
@@ -29,7 +31,7 @@ void		check_primitives(t_obj *obj, t_obj *light, t_obj *cam, t_calc *v)
 		if (tmp->obj_type == SPHERE)
 		{
 			check_sphere(cam, v, tmp);
-			calc_norm(cam, v, tmp);
+			calc_sphere_norm(cam, v, tmp);
 			if (dist > v->t && v->t > 0.00000001)
 			{
 				closer = tmp;
@@ -48,6 +50,7 @@ void		check_primitives(t_obj *obj, t_obj *light, t_obj *cam, t_calc *v)
 		else if (tmp->obj_type == CYLINDER)
 		{
 			check_cylinder(cam, v, tmp);
+			calc_cylinder_norm(cam, v, tmp);
 			if (dist > v->t && v->t > 0.00000001)
 			{
 				closer = tmp;
@@ -57,6 +60,7 @@ void		check_primitives(t_obj *obj, t_obj *light, t_obj *cam, t_calc *v)
 		else if (tmp->obj_type == CONE)
 		{
 			check_cone(cam, v, tmp);
+			calc_cone_norm(cam, v, tmp);
 			if (dist > v->t && v->t > 0.00000001)
 			{
 				closer = tmp;
@@ -65,6 +69,13 @@ void		check_primitives(t_obj *obj, t_obj *light, t_obj *cam, t_calc *v)
 		}
 		tmp = tmp->next;
 	}
-	calc_light(closer, light, v, obj);
+	v->t = dist;
+	v->theta = 0;
+	while (light)
+	{
+		if (light->obj_type == LIGHT)
+			calc_light(closer, light, v, obj);
+		light = light->next;
+	}
 }
 
