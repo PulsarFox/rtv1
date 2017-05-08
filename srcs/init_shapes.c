@@ -15,52 +15,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void		calc_dist(t_obj *obj, t_obj *cam, t_calc *v)
+{
+	if (obj->obj_type == SPHERE)
+	{
+		check_sphere(cam, v, obj);
+		calc_sphere_norm(cam, v, obj);
+	}
+	else if (obj->obj_type == PLAN)
+		check_plan(cam, v, obj);
+	else if (obj->obj_type == CYLINDER)
+	{
+		check_cylinder(cam, v, obj);
+		calc_cylinder_norm(cam, v, obj);
+	}
+	else if (obj->obj_type == CONE)
+	{
+		check_cone(cam, v, obj);
+		calc_cone_norm(cam, v, obj);
+	}
+}
+
+void		set_light(t_obj *current, t_calc *v, t_obj *cam)
+{
+	t_obj	*light;
+
+	v->theta = 0;
+	v->blue = 0;
+	v->green = 0;
+	v->red = 0;
+	light = cam;
+	while (light)
+	{
+		if (light->obj_type == LIGHT)
+			calc_light(current, light, v, cam);
+		light = light->next;
+	}
+}
+
 void		check_primitives(t_obj *obj, t_obj *cam, t_calc *v)
 {
 	t_obj *tmp;
 	t_obj *closer;
-	t_obj *light;
 	double	dist;
 
 	dist = 20000;
-	light = obj;
 	tmp = obj;
 	closer = NULL;
 	while (tmp)
 	{
-		if (tmp->obj_type == SPHERE)
+		if (tmp->obj_type != CAMERA && tmp->obj_type != LIGHT)
 		{
-			check_sphere(cam, v, tmp);
-			calc_sphere_norm(cam, v, tmp);
-			if (dist > v->t && v->t > 0.00000001)
-			{
-				closer = tmp;
-				dist = v->t;
-			}
-		}
-		else if (tmp->obj_type == PLAN)
-		{
-			check_plan(cam, v, tmp);
-			if (dist > v->t && v->t > 0.00000001)
-			{
-				closer = tmp;
-				dist = v->t;
-			}
-		}
-		else if (tmp->obj_type == CYLINDER)
-		{
-			check_cylinder(cam, v, tmp);
-			calc_cylinder_norm(cam, v, tmp);
-			if (dist > v->t && v->t > 0.00000001)
-			{
-				closer = tmp;
-				dist = v->t;
-			}
-		}
-		else if (tmp->obj_type == CONE)
-		{
-			check_cone(cam, v, tmp);
-			calc_cone_norm(cam, v, tmp);
+			calc_dist(tmp, cam, v);
 			if (dist > v->t && v->t > 0.00000001)
 			{
 				closer = tmp;
@@ -70,12 +76,6 @@ void		check_primitives(t_obj *obj, t_obj *cam, t_calc *v)
 		tmp = tmp->next;
 	}
 	v->t = dist;
-	v->theta = 0;
-	while (light)
-	{
-		if (light->obj_type == LIGHT)
-			calc_light(closer, light, v, obj);
-		light = light->next;
-	}
+	set_light(closer, v, cam);
 }
 

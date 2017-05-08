@@ -18,20 +18,21 @@
 void		pos_calc(int x, int y, t_calc *v, t_obj *cam)
 {
 	double	norm;
+	t_vect	tmp;
 
-	v->pixx = v->pix_origin_x + (1 * v->xind * x) -
+	v->pix.x = v->pix_origin.x + (1 * v->xind * x) -
 		(0 * v->yind * y);
-	v->pixy = v->pix_origin_y + (0 * v->xind * x) -
+	v->pix.y = v->pix_origin.y + (0 * v->xind * x) -
 		(1 * v->yind * y);
-	v->pixz = v->pix_origin_z + (0 * v->xind * x) -
+	v->pix.z = v->pix_origin.z + (0 * v->xind * x) -
 		(0 * v->yind * y);
-	v->dirx = v->pixx - cam->x;
-	v->diry = v->pixy - cam->y;
-	v->dirz = v->pixz - cam->z;
-	norm = 1 / sqrt(pow(v->dirx, 2) + pow(v->diry, 2) + pow(v->dirz, 2));
-	cam->dir[0] = v->dirx * norm;
-	cam->dir[1] = v->diry * norm;
-	cam->dir[2] = v->dirz * norm;
+	tmp.x = v->pix.x - cam->pos->x;
+	tmp.y = v->pix.y - cam->pos->y;
+	tmp.z = v->pix.z - cam->pos->z;
+	norm = 1 / sqrt(dot_product(&tmp, &tmp));
+	cam->dir->x = tmp.x * norm;
+	cam->dir->y = tmp.y * norm;
+	cam->dir->z = tmp.z * norm;
 }
 
 void	init_pos(t_env *e, t_obj *cam, t_calc *v)
@@ -39,13 +40,13 @@ void	init_pos(t_env *e, t_obj *cam, t_calc *v)
 	v->v_pWidth = 0.5;
 	v->v_pHeight = ((double)e->height * v->v_pWidth) / (double)e->width;
 	v->v_pDist = 0.5;
-	v->pix_origin_x = cam->x + ((cam->dir[0] * v->v_pDist)
+	v->pix_origin.x = cam->pos->x + ((cam->dir->x * v->v_pDist)
 			+ (0 * (v->v_pHeight / 2.0)))
 				- (1 * (v->v_pWidth / 2.0));
-	v->pix_origin_y = cam->y + ((cam->dir[1] * v->v_pDist)
+	v->pix_origin.y = cam->pos->y + ((cam->dir->y * v->v_pDist)
 			+ (1 * (v->v_pHeight / 2.0)))
 				- (0 * (v->v_pWidth / 2.0));
-	v->pix_origin_z = cam->z + ((cam->dir[2] * v->v_pDist)
+	v->pix_origin.z = cam->pos->z + ((cam->dir->z * v->v_pDist)
 			+ (0 * (v->v_pHeight / 2.0)))
 				- (0 * (v->v_pWidth / 2.0));
 	v->xind = (v->v_pWidth / (double)e->width);

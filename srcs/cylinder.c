@@ -3,11 +3,11 @@
 
 static void		calc_cylinder(t_obj *obj, t_obj *cam, t_calc *v)
 {
-	v->a = (pow(cam->dir[0], 2) + pow(cam->dir[2], 2));
-	v->b = 2 * cam->dir[0] * (cam->x - obj->x) + 2 * cam->dir[2] *
-	(cam->z - obj->z);
-	v->c = pow((cam->x - obj->x), 2) + pow((cam->z - obj->z), 2) -
-	pow(obj->r, 2);
+	v->a = (pow(cam->dir->x, 2) + pow(cam->dir->z, 2));
+	v->b = 2 * cam->dir->x * (cam->pos->x - obj->pos->x) + 2 * cam->dir->z *
+		(cam->pos->z - obj->pos->z);
+	v->c = pow((cam->pos->x - obj->pos->x), 2) + pow((cam->pos->z -
+		obj->pos->z), 2) - pow(obj->r, 2);
 	if (v->a == 0.25)
 		v->det = pow(v->b, 2) - v->c;
 	else
@@ -16,19 +16,17 @@ static void		calc_cylinder(t_obj *obj, t_obj *cam, t_calc *v)
 
 void		calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj)
 {
-	double	x;
-	double	y;
-	double	z;
-	double	norm;
+	t_vect	*base;
+	t_vect	*impact;
+	t_vect	*norm;
 
 	get_impact(v, cam);
-	x = v->impx - obj->x;
-	y = 0;
-	z = v->impz - obj->z;
-	norm = 1 / sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
-	obj->dir[0] = x * fabs(norm);
-	obj->dir[1] = y * fabs(norm);
-	obj->dir[2] = z * fabs(norm);
+	base = copy_vect(obj->pos);
+	impact = copy_vect(v->imp);
+	base->y = impact->y;
+	norm = new_vect(impact->x - base->x, impact->y - base->y, impact->z -
+		base->z);
+	normalize(norm);
 }
 
 int		check_cylinder(t_obj *cam, t_calc *v, t_obj *obj)

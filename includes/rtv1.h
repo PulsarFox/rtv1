@@ -30,7 +30,6 @@ typedef struct		s_env
 {
 	void			*mlx;
 	void			*win;
-	struct s_camera	*camera;
 	int				height;
 	int				width;
 	void			*img;
@@ -40,21 +39,22 @@ typedef struct		s_env
 	int				endian;
 }					t_env;
 
+typedef struct		s_vect
+{
+	double			x;
+	double			y;
+	double			z;
+}					t_vect;
+
 typedef struct		s_calc
 {
 	double			t;
-	double			pixx;
-	double			pixy;
-	double			pixz;
-	double			dirx;
-	double			diry;
-	double			dirz;
+	t_vect			pix;
+	t_vect			dir;
 	double			a;
 	double			b;
 	double			c;
-	double			impx;
-	double			impy;
-	double			impz;
+	t_vect			*imp;
 	double			det;
 	double			red;
 	double			blue;
@@ -62,72 +62,74 @@ typedef struct		s_calc
 	double			v_pWidth;
 	double			v_pHeight;
 	double			v_pDist;
-	double			pix_origin_x;
-	double			pix_origin_y;
-	double			pix_origin_z;
+	t_vect			pix_origin;
 	double			xind;
 	double			yind;
 	double			theta;
+	double			shadow;
 }					t_calc;
 
 typedef struct		s_obj
 {
-	int				x;
-	int				y;
-	int				z;
+	t_vect			*pos;
 	int				obj_type;
 	int				index;
 	int				r;
 	char			*name;
-	double			dir[3];
-	double			rot[3];
-	double			color[3];
+	t_vect			*dir;
+	t_vect			*rot;
+	t_vect			*color;
 	struct s_obj	*next;
 }					t_obj;
 
-void	raytracer(t_env *e, t_calc *v, t_obj *obj);
-int		key_hook(int keycode, t_env *e);
-int		check_sphere(t_obj *cam, t_calc *v, t_obj *coord);
-int		check_plan(t_obj *cam, t_calc *v, t_obj *coord);
-int		check_cylinder(t_obj *cam, t_calc *v, t_obj *coord);
-int		check_cone(t_obj *cam, t_calc *v, t_obj *coord);
-void	check_primitives(t_obj *obj, t_obj *cam,  t_calc *v);
-void	get_impact(t_calc *v, t_obj *cam);
-void	init_light(t_obj *light);
-int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_obj *cam);
-void	calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj);
-void	calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj);
-void	calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj);
-void	parser(int fd, t_obj **obj);
-void	free_list_obj(t_obj *obj);
-void	calc_shadow(t_obj *cam, t_obj *light, t_calc *v, t_obj *current);
-void	set_color(t_calc *v, double i);
+void				raytracer(t_env *e, t_calc *v, t_obj *obj);
+int					key_hook(int keycode, t_env *e);
+int					check_sphere(t_obj *cam, t_calc *v, t_obj *coord);
+int					check_plan(t_obj *cam, t_calc *v, t_obj *coord);
+int					check_cylinder(t_obj *cam, t_calc *v, t_obj *coord);
+int					check_cone(t_obj *cam, t_calc *v, t_obj *coord);
+void				check_primitives(t_obj *obj, t_obj *cam,  t_calc *v);
+void				get_impact(t_calc *v, t_obj *cam);
+void				init_light(t_obj *light);
+int					calc_light(t_obj *obj, t_obj *light, t_calc *v, t_obj *cam);
+void				calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj);
+void				calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj);
+void				calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj);
+void				parser(int fd, t_obj **obj);
+void				free_list_obj(t_obj *obj);
+int					calc_shadow(t_obj *cam, t_obj *lght, t_calc *v, t_obj *c);
+void				set_color(t_calc *v, double i);
 /*
 ** CHECKERS
 */
-int		same_char_line(char *str, char c);
-int		check_type(char *str);
-char	**get_conf(char *line, char c1, char c2);
-char	*get_between_cs(char *str, char c1, char c2);
-int		get_nbr(char *str);
-void	get_dir_type(char *line, t_obj *obj);
-void	read_line(char *line, t_obj *obj);
-int		parse_camera(int fd, t_obj *obj);
-int		parse_light(int fd, t_obj *obj);
-int		parse_plan(int fd, t_obj *obj);
-int		parse_sphere(int fd, t_obj *obj);
-int		parse_cone(int fd, t_obj *obj);
-int		parse_cylinder(int fd, t_obj *obj);
-void	set_null(t_obj *obj);
-void	verif_standarts(t_obj **obj);
+int					same_char_line(char *str, char c);
+int					check_type(char *str);
+char				**get_conf(char *line, char c1, char c2);
+char				*get_between_cs(char *str, char c1, char c2);
+int					get_nbr(char *str);
+void				get_dir_type(char *line, t_obj *obj);
+void				read_line(char *line, t_obj *obj);
+int					parse_camera(int fd, t_obj *obj);
+int					parse_light(int fd, t_obj *obj);
+int					parse_plan(int fd, t_obj *obj);
+int					parse_sphere(int fd, t_obj *obj);
+int					parse_cone(int fd, t_obj *obj);
+int					parse_cylinder(int fd, t_obj *obj);
+void				set_null(t_obj *obj);
+void				verif_standarts(t_obj **obj);
 
 /*
 ** ERRORS
 */
-void	ft_syntax_error(char *line, int i);
-void	ft_delimitor_error(int i);
-void	ft_malloc_error(void);
-void	ft_args_error(char *str, int i);
-void	ft_file_error(int i);
+void				ft_syntax_error(char *line, int i);
+void				ft_delimitor_error(int i);
+void				ft_malloc_error(void);
+void				ft_args_error(char *str, int i);
+void				ft_file_error(int i);
+
+double				dot_product(t_vect *v1, t_vect *v2);
+void				normalize(t_vect *vect);
+t_vect				*copy_vect(t_vect *vect);
+t_vect				*new_vect(double x, double y, double z);
 
 #endif
