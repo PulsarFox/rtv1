@@ -16,21 +16,25 @@
 #include <stdio.h>
 void	set_null(t_obj *obj)
 {
-	obj->x = 0;
-	obj->y = 0;
-	obj->z = 0;
+	obj->pos = (t_vect *)malloc(sizeof(t_vect));
+	obj->pos->x = 0;
+	obj->pos->y = 0;
+	obj->pos->z = 0;
 	obj->index = 0;
 	obj->r = 0;
 	obj->name = NULL;
-	obj->dir[0] = 0;
-	obj->dir[1] = 0;
-	obj->dir[2] = 1;
-	obj->color[0] = 255;
-	obj->color[1] = 255;
-	obj->color[2] = 255;
-	obj->rot[0] = 0;
-	obj->rot[1] = 0;
-	obj->rot[2] = 0;
+	obj->dir = (t_vect *)malloc(sizeof(t_vect));
+	obj->dir->x = 0;
+	obj->dir->y = 0;
+	obj->dir->z = 1;
+	obj->color = (t_vect *)malloc(sizeof(t_vect));
+	obj->color->x = 255;
+	obj->color->y = 255;
+	obj->color->z = 255;
+	obj->rot = (t_vect *)malloc(sizeof(t_vect));
+	obj->rot->x = 0;
+	obj->rot->y = 0;
+	obj->rot->z = 0;
 	obj->next = NULL;
 }
 

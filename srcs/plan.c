@@ -21,12 +21,11 @@ int		check_plan(t_obj *cam, t_calc *v, t_obj *cord)
 	int			yl;
 	int			zl;
 
-	xl = cam->x - cord->x;
-	yl = cam->y - cord->y;
-	zl = cam->z - cord->z;
-	dir = -((cord->dir[0] * xl + cord->dir[1] * yl + cord->dir[2] * zl)
-				/ (cord->dir[0] * cam->dir[0] + cord->dir[1] * cam->dir[1]
-					+ cord->dir[2] * cam->dir[2]));
+	xl = cam->pos->x - cord->pos->x;
+	yl = cam->pos->y - cord->pos->y;
+	zl = cam->pos->z - cord->pos->z;
+	dir = -((cord->dir->x * xl + cord->dir->y * yl + cord->dir->z * zl)
+				/ dot_product(cord->dir, cam->dir));
 	if (dir > 0.00000001 && dir < 20000)
 	{
 		if (v->t <= dir && v->t != 0)

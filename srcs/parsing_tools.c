@@ -57,27 +57,27 @@ void		get_dir_type(char *line, t_obj *obj)
 {
 	if (ft_strstr(line, "VERTICAL"))
 	{
-		obj->dir[0] = 0;
-		obj->dir[1] = 0;
-		obj->dir[2] = -1;
+		obj->dir->x = 0;
+		obj->dir->y = 0;
+		obj->dir->z = -1;
 	}
 	else if (ft_strstr(line, "HORIZONTAL"))
 	{
-		obj->dir[0] = 0;
-		obj->dir[1] = 1;
-		obj->dir[2] = 0;
+		obj->dir->x = 0;
+		obj->dir->y = 1;
+		obj->dir->z = 0;
 	}
 	else if (ft_strstr(line, "SLICE"))
 	{
-		obj->dir[0] = 1;
-		obj->dir[1] = 0;
-		obj->dir[2] = 0;
+		obj->dir->x = 1;
+		obj->dir->y = 0;
+		obj->dir->z = 0;
 	}
 	else if (ft_strstr(line, "DEFAULT") || !ft_strstr(line, "DEFAULT"))
 	{
-		obj->dir[0] = 0;
-		obj->dir[1] = 1;
-		obj->dir[2] = 0;
+		obj->dir->x = 0;
+		obj->dir->y = 1;
+		obj->dir->z = 0;
 	}
 }
 

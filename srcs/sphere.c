@@ -17,32 +17,31 @@
 
 static void		calc_sphere(t_obj *cam, t_calc *v, t_obj *cord)
 {
-	v->a = pow(cam->dir[0], 2) + pow(cam->dir[1], 2) + pow(cam->dir[2], 2);
-	v->b = 2 * (cam->dir[0] * (cam->x - cord->x) + cam->dir[1]
-			* (cam->y - cord->y) + cam->dir[2] * (cam->z - cord->z));
-	v->c = (pow((cam->x - cord->x), 2) + pow((cam->y - cord->y), 2) +
-			pow((cam->z - cord->z), 2) - pow(cord->r, 2));
+	v->a = pow(cam->dir->x, 2) + pow(cam->dir->y, 2) + pow(cam->dir->z, 2);
+	v->b = 2 * (cam->dir->x * (cam->pos->x - cord->pos->x) + cam->dir->y
+			* (cam->pos->y - cord->pos->y) + cam->dir->z *
+				(cam->pos->z - cord->pos->z));
+	v->c = (pow((cam->pos->x - cord->pos->x), 2) + pow((cam->pos->y -
+		cord->pos->y), 2) + pow((cam->pos->z - cord->pos->z), 2) -
+			pow(cord->r, 2));
 	if (v->a == 0.25)
 		v->det = pow(v->b, 2) - v->c;
 	else
 		v->det = pow(v->b, 2) - (4 * v->a * v->c);
 }
 
-void		calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj)
+t_vect		*calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj)
 {
-	double	x;
-	double	y;
-	double	z;
-	double	norm;
+	t_vect	*base;
+	t_vect	*impc;
+	t_vect	*norm;
 
 	get_impact(v, cam);
-	x = v->impx - obj->x;
-	y = v->impy - obj->y;
-	z = v->impz - obj->z;
-	norm = 1 / sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
-	obj->dir[0] = x * norm;
-	obj->dir[1] = y * norm;
-	obj->dir[2] = z * norm;
+	base = copy_vect(obj->pos);
+	impc = copy_vect(v->imp);
+	norm = new_vect(impc->x - base->x, impc->y - base->y, impc->z - base->z);
+	normalize(norm);
+	return (norm);
 }
 
 int		check_sphere(t_obj *cam, t_calc *v, t_obj *obj)

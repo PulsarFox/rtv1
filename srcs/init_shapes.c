@@ -20,19 +20,19 @@ void		calc_dist(t_obj *obj, t_obj *cam, t_calc *v)
 	if (obj->obj_type == SPHERE)
 	{
 		check_sphere(cam, v, obj);
-		calc_sphere_norm(cam, v, obj);
+		obj->dir = copy_vect(calc_sphere_norm(cam, v, obj));
 	}
 	else if (obj->obj_type == PLAN)
 		check_plan(cam, v, obj);
 	else if (obj->obj_type == CYLINDER)
 	{
 		check_cylinder(cam, v, obj);
-		calc_cylinder_norm(cam, v, obj);
+		obj->dir = copy_vect(calc_cylinder_norm(cam, v, obj));
 	}
 	else if (obj->obj_type == CONE)
 	{
 		check_cone(cam, v, obj);
-		calc_cone_norm(cam, v, obj);
+		obj->dir = copy_vect(calc_cone_norm(cam, v, obj));
 	}
 }
 

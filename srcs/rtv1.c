@@ -30,14 +30,13 @@ t_env	*init_env(void)
 	return (e);
 }
 
-
 int		main(int argc, char **argv)
 {
-	t_env	*e;
+	t_env		*e;
 	t_calc		*calc;
-	t_obj	*obj;
-	t_obj	*tmp;
-	int		fd;
+	t_obj		*obj;
+	t_obj		*tmp;
+	int			fd;
 
 	(void)argv;
 	if (argc != 2)
@@ -51,9 +50,10 @@ int		main(int argc, char **argv)
 	e = init_env();
 	while (tmp)
 	{
-		printf("coord = %d, %d, %d. type = %d. r = %d, dir = %f, %f, %f, color = %f, %f, %f\n", tmp->x, tmp->y, tmp->z, tmp->obj_type, tmp->r, tmp->dir[0], tmp->dir[1], tmp->dir[2], tmp->color[0], tmp->color[1], tmp->color[2]);
+		printf("coord = %f, %f, %f. type = %d. r = %d, dir = %f, %f, %f, color = %f, %f, %f\n", tmp->pos->x, tmp->pos->y, tmp->pos->z, tmp->obj_type, tmp->r, tmp->dir->x, tmp->dir->y, tmp->dir->z, tmp->color->x, tmp->color->y, tmp->color->z);
 		tmp = tmp->next;
 	}
+	calc->imp = (t_vect *)malloc(sizeof(t_vect));
 	raytracer(e, calc, obj);
 	mlx_put_image_to_window(e->mlx, e->win, e->img, 0, 0);
 	mlx_key_hook(e->win, key_hook, e);

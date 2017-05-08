@@ -7,12 +7,12 @@ void		calc_cone(t_obj *cam, t_calc *v, t_obj *obj)
 	double	dify;
 	double	difz;
 
-	difx = cam->x - obj->x;
-	dify = cam->y - obj->y;
-	difz = cam->z - obj->z;
-	v->a = -pow(cam->dir[0], 2) + pow(cam->dir[1], 2) + pow(cam->dir[2], 2);
-	v->b = 2 * (-(cam->dir[0] * difx) + cam->dir[1] * dify
-	+ cam->dir[2] * difz);
+	difx = cam->pos->x - obj->pos->x;
+	dify = cam->pos->y - obj->pos->y;
+	difz = cam->pos->z - obj->pos->z;
+	v->a = -pow(cam->dir->x, 2) + pow(cam->dir->y, 2) + pow(cam->dir->z, 2);
+	v->b = 2 * (-(cam->dir->x * difx) + cam->dir->y * dify
+	+ cam->dir->z * difz);
 	v->c = -pow(difx, 2) + pow(dify, 2) + pow(difz, 2);
 	if (v->a == 0.25)
 		v->det = pow(v->b, 2) - v->c;
@@ -20,21 +20,18 @@ void		calc_cone(t_obj *cam, t_calc *v, t_obj *obj)
 		v->det = pow(v->b, 2) - (4 * v->a * v->c);
 }
 
-void		calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj)
+t_vect		*calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj)
 {
-	double	x;
-	double	y;
-	double	z;
-	double	norm;
+	t_vect	*base;
+	t_vect	*impc;
+	t_vect	*normal;
 
 	get_impact(v, cam);
-	x = v->impx - obj->x;
-	y = v->impy - obj->y;
-	z = v->impz - obj->z;
-	norm = 1 / sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
-	obj->dir[0] = x * fabs(norm);
-	obj->dir[1] = y * fabs(norm);
-	obj->dir[2] = z * fabs(norm);
+	base = copy_vect(obj->pos);
+	impc = copy_vect(v->imp);
+	normal = new_vect(impc->x - base->x, impc->y - base->y, impc->z - base->z);
+	normalize(normal);
+	return (normal);
 }
 
 int		check_cone(t_obj *cam, t_calc *v, t_obj *obj)

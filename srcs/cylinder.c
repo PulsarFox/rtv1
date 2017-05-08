@@ -14,7 +14,7 @@ static void		calc_cylinder(t_obj *obj, t_obj *cam, t_calc *v)
 		v->det = pow(v->b, 2) - (4 * v->a * v->c);
 }
 
-void		calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj)
+t_vect		*calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj)
 {
 	t_vect	*base;
 	t_vect	*impact;
@@ -27,6 +27,7 @@ void		calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj)
 	norm = new_vect(impact->x - base->x, impact->y - base->y, impact->z -
 		base->z);
 	normalize(norm);
+	return (norm);
 }
 
 int		check_cylinder(t_obj *cam, t_calc *v, t_obj *obj)

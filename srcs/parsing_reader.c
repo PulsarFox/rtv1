@@ -64,9 +64,9 @@ static void		read_line_two(char *line, t_obj *obj)
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->rot[0] = ft_atoi(conf[0]);
-		obj->rot[1] = ft_atoi(conf[1]);
-		obj->rot[2] = ft_atoi(conf[2]);
+		obj->rot->x = ft_atoi(conf[0]);
+		obj->rot->y = ft_atoi(conf[1]);
+		obj->rot->z = ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}
@@ -87,9 +87,9 @@ static void		read_color(char *line, t_obj *obj, char **conf)
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->color[2] = ft_atoi(conf[0]);
-		obj->color[1] = ft_atoi(conf[1]);
-		obj->color[0] = ft_atoi(conf[2]);
+		obj->color->x = ft_atoi(conf[0]);
+		obj->color->y = ft_atoi(conf[1]);
+		obj->color->z = ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}
@@ -97,9 +97,9 @@ static void		read_color(char *line, t_obj *obj, char **conf)
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->x = obj->x + ft_atoi(conf[0]);
-		obj->y = obj->y + ft_atoi(conf[1]);
-		obj->z = obj->z + ft_atoi(conf[2]);
+		obj->pos->x = obj->pos->x + ft_atoi(conf[0]);
+		obj->pos->y = obj->pos->y + ft_atoi(conf[1]);
+		obj->pos->z = obj->pos->z + ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}
@@ -114,9 +114,9 @@ void	read_line(char *line, t_obj *obj)
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->x = ft_atoi(conf[0]);
-		obj->y = ft_atoi(conf[1]);
-		obj->z = ft_atoi(conf[2]);
+		obj->pos->x = ft_atoi(conf[0]);
+		obj->pos->y = ft_atoi(conf[1]);
+		obj->pos->z = ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}

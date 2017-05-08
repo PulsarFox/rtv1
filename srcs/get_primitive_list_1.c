@@ -24,9 +24,9 @@ int		parse_camera(int fd, t_obj *obj)
 	{
 		if (check_type(line) == SPACE || check_type(line) == PARAMETER)
 			read_line(line, obj);
-		obj->dir[0] = 0;
-		obj->dir[1] = 0;
-		obj->dir[2] = 1;
+		obj->dir->x = 0;
+		obj->dir->y = 0;
+		obj->dir->z = 1;
 		if (check_type(line) == DELIMITER)
 			return (2);
 		else if (check_type(line) == TITLE)

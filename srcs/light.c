@@ -31,8 +31,6 @@ void	set_color(t_calc *v, double color)
 
 static void	get_light_norm(t_obj *light, t_vect *imp)
 {
-	double	norme;
-
 	light->dir->x = light->pos->x - imp->x;
 	light->dir->y = light->pos->y - imp->y;
 	light->dir->z = light->pos->z - imp->z;
@@ -71,7 +69,6 @@ int		calc_shadow(t_obj *cam, t_obj *light, t_calc *v, t_obj *current)
 int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_obj *cam)
 {
 	double	theta;
-	t_vect	*imp;
 
 	if (obj == NULL)
 	{
@@ -79,7 +76,7 @@ int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_obj *cam)
 		return (0);
 	}
 	get_impact(v, cam);
-	get_light_norm(light, imp);
+	get_light_norm(light, v->imp);
 	theta = dot_product(light->dir, obj->dir);
 	if (v->theta < theta)
 	{
