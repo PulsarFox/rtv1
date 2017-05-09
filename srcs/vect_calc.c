@@ -14,7 +14,7 @@ void	normalize(t_vect *v1)
 {
 	double	norme;
 
-	norme = 1 / (pow(v1->x, 2) + pow(v1->y, 2) + pow(v1->z, 2));
+	norme = 1 / sqrt((pow(v1->x, 2) + pow(v1->y, 2) + pow(v1->z, 2)));
 	v1->x = norme * v1->x;
 	v1->y = norme * v1->y;
 	v1->z = norme * v1->z;

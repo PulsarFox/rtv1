@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 12:55:39 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/04 16:29:49 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/09 17:19:24 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,29 @@
 #include "libft.h"
 #include <stdio.h>
 
-static void		calc_sphere(t_obj *cam, t_calc *v, t_obj *cord)
+static int		calc_sphere(t_obj *cam, t_calc *v, t_obj *cord)
 {
-	v->a = pow(cam->dir->x, 2) + pow(cam->dir->y, 2) + pow(cam->dir->z, 2);
-	v->b = 2 * (cam->dir->x * (cam->pos->x - cord->pos->x) + cam->dir->y
+	double	a;
+	double	b;
+	double	c;
+	double	det;
+
+	a = pow(cam->dir->x, 2) + pow(cam->dir->y, 2) + pow(cam->dir->z, 2);
+	b = 2 * (cam->dir->x * (cam->pos->x - cord->pos->x) + cam->dir->y
 			* (cam->pos->y - cord->pos->y) + cam->dir->z *
 				(cam->pos->z - cord->pos->z));
-	v->c = (pow((cam->pos->x - cord->pos->x), 2) + pow((cam->pos->y -
+	c = (pow((cam->pos->x - cord->pos->x), 2) + pow((cam->pos->y -
 		cord->pos->y), 2) + pow((cam->pos->z - cord->pos->z), 2) -
 			pow(cord->r, 2));
-	if (v->a == 0.25)
-		v->det = pow(v->b, 2) - v->c;
+	if (a == 0.25)
+		det = pow(b, 2) - c;
 	else
-		v->det = pow(v->b, 2) - (4 * v->a * v->c);
+		det = pow(b, 2) - (4 * a * c);
+	if (det <= 0)
+		return (0);
+	v->dist1 = (-b + sqrt(det)) / (2 * a);
+	v->dist2 = (-b - sqrt(det)) / (2 * a);
+	return (1);
 }
 
 t_vect		*calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj)
@@ -36,32 +46,27 @@ t_vect		*calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj)
 	t_vect	*impc;
 	t_vect	*norm;
 
-	get_impact(v, cam);
+	impc = get_impact(v, cam);
 	base = copy_vect(obj->pos);
-	impc = copy_vect(v->imp);
 	norm = new_vect(impc->x - base->x, impc->y - base->y, impc->z - base->z);
 	normalize(norm);
+	free(impc);
 	return (norm);
 }
 
 int		check_sphere(t_obj *cam, t_calc *v, t_obj *obj)
 {
-	double	dist1;
-	double	dist2;
 	double	dist;
 
-	calc_sphere(cam, v, obj);
-	if (v->det <= 0)
+	if (!calc_sphere(cam, v, obj))
 		return (0);
-	dist1 = (-v->b + sqrt(v->det)) / (2 * v->a);
-	dist2 = (-v->b - sqrt(v->det)) / (2 * v->a);
-	if (dist1 < 0.00000001 && dist2 < 0.00000001)
+	if (v->dist1 < 0.00000001 && v->dist2 < 0.00000001)
 		return (0);
-	if (dist1 > 0.00000001 && dist2 > 0.00000001)
+	if (v->dist1 > 0.00000001 && v->dist2 > 0.00000001)
 	{
-		dist = dist2;
-		if (dist1 < dist2)
-			dist = dist1;
+		dist = v->dist2;
+		if (v->dist1 < v->dist2)
+			dist = v->dist1;
 		if (v->t <= dist && v->t > 0.00000001)
 			return (0);
 		v->t = dist;

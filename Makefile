@@ -6,7 +6,7 @@
 #    By: savincen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/12/03 14:19:49 by savincen          #+#    #+#              #
-#    Updated: 2017/04/13 20:02:53 by savincen         ###   ########.fr        #
+#    Updated: 2017/05/09 13:43:19 by savincen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@make -C libft/
-	@$(CC) -o $(NAME) $(OBJS) $(LIBFT) $(MLXFLAGS) -I $(HEADERS) -L ./minilibx_macos/
+	@$(CC) -o $(NAME) $(OBJS) $(LIBFT) $(MLXFLAGS) -I $(HEADERS)
 	@echo "Executable $(NAME) cree with $(CFLAGS)"
 
 debug: CFLAGS += -g

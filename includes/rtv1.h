@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 18:35:53 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/04 18:13:18 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/09 19:21:53 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,9 @@ typedef struct		s_calc
 	double			t;
 	t_vect			pix;
 	t_vect			dir;
-	double			a;
-	double			b;
-	double			c;
 	t_vect			*imp;
-	double			det;
+	double			dist1;
+	double			dist2;
 	double			red;
 	double			blue;
 	double			green;
@@ -67,6 +65,7 @@ typedef struct		s_calc
 	double			yind;
 	double			theta;
 	double			shadow;
+	int				count;
 }					t_calc;
 
 typedef struct		s_obj
@@ -89,15 +88,15 @@ int					check_plan(t_obj *cam, t_calc *v, t_obj *coord);
 int					check_cylinder(t_obj *cam, t_calc *v, t_obj *coord);
 int					check_cone(t_obj *cam, t_calc *v, t_obj *coord);
 void				check_primitives(t_obj *obj, t_obj *cam,  t_calc *v);
-void				get_impact(t_calc *v, t_obj *cam);
+t_vect				*get_impact(t_calc *v, t_obj *cam);
 void				init_light(t_obj *light);
-int					calc_light(t_obj *obj, t_obj *light, t_calc *v, t_obj *cam);
+int					calc_light(t_obj *obj, t_obj *lht, t_calc *v, t_vect *vct);
 t_vect				*calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj);
 t_vect				*calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj);
 t_vect				*calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj);
 void				parser(int fd, t_obj **obj);
 void				free_list_obj(t_obj *obj);
-int					calc_shadow(t_obj *cam, t_obj *lght, t_calc *v, t_obj *c);
+int					calc_shadow(t_obj *lght, t_calc *v, t_obj *c);
 void				set_color(t_calc *v, double i);
 /*
 ** CHECKERS

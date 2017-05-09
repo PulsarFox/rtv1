@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 18:08:22 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/04 18:25:45 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/09 20:08:16 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 #include <stdio.h>
 #include <math.h>
 
-void	get_impact(t_calc *v, t_obj *cam)
+t_vect	*get_impact(t_calc *v, t_obj *cam)
 {
-	v->imp->x = cam->pos->x + (cam->dir->x * v->t);
-	v->imp->y = cam->pos->y + (cam->dir->y * v->t);
-	v->imp->z = cam->pos->z + (cam->dir->z * v->t);
+	t_vect	*vect;
+
+	vect = new_vect((cam->pos->x + (cam->dir->x * v->t)), (cam->pos->y +
+				(cam->dir->y * v->t)), (cam->pos->z + (cam->dir->z * v->t)));
+	return (vect);
 }
 
 void	set_color(t_calc *v, double color)
@@ -37,36 +39,33 @@ static void	get_light_norm(t_obj *light, t_vect *imp)
 	normalize(light->dir);
 }
 
-int		calc_shadow(t_obj *cam, t_obj *light, t_calc *v, t_obj *current)
+int		calc_shadow(t_obj *light, t_calc *v, t_obj *current)
 {
 	t_obj	*tmp;
 	int		chck;
 
 	chck = 0;
-	tmp = cam;
-	light->dir->x = v->imp->x - light->pos->x;
-	light->dir->y = v->imp->y - light->pos->y;
-	light->dir->z = v->imp->z - light->pos->z;
-	while (tmp)
+	tmp = light;
+	while (tmp && chck == 0)
 	{
 		if (tmp->obj_type == SPHERE && tmp != current &&
-				check_sphere(light, v, tmp))
+				check_sphere(light, v, tmp) && v->t <= 0.99999999)
 				chck = 1;
 		else if (tmp->obj_type == PLAN && tmp != current &&
-				check_plan(light, v, tmp))
+				check_plan(light, v, tmp) && v->t <= 0.99999999)
 				chck = 1;
 		else if (tmp->obj_type == CONE && tmp != current &&
-				check_cone(light, v, tmp))
+				check_cone(light, v, tmp) && v->t <= 0.99999999)
 				chck = 1;
 		else if (tmp->obj_type == CYLINDER && tmp != current &&
-				check_cylinder(light, v, tmp))
-				chck = 1;
+				check_cylinder(light, v, tmp) && v->t <= 0.99999999)
+			chck = 1;
 		tmp = tmp->next;
 	}
 	return (chck);
 }
 
-int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_obj *cam)
+int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_vect *vect)
 {
 	double	theta;
 
@@ -75,15 +74,14 @@ int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_obj *cam)
 		set_color(v, 0);
 		return (0);
 	}
-	get_impact(v, cam);
-	get_light_norm(light, v->imp);
+	get_light_norm(light, vect);
 	theta = dot_product(light->dir, obj->dir);
 	if (v->theta < theta)
 	{
 		v->theta = theta;
-		v->blue = obj->color->x * light->color->x * v->theta;
+		v->red = obj->color->x * light->color->x * v->theta;
 		v->green = obj->color->y * light->color->y * v->theta;
-		v->red = obj->color->z * light->color->z * v->theta;
+		v->blue = obj->color->z * light->color->z * v->theta;
 	}
 	return (1);
 }

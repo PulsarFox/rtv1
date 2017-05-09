@@ -7,27 +7,30 @@ CAMERA
 ------------
 
 LIGHT
+	position = (0, 20, 50)
+	color = (1, 1, 1)
+	name = "light2"
+------------
+LIGHT
 	position = (-30, 70, 100)
 	color = (1, 1, 1)
 	name = "light1"
 ------------
 
+
 LIGHT
-	position = (0, 50, 50)
+	position = (40, 100, 150)
 	color = (1, 1, 1)
-	name = "light2"
+	name = "light3"
 ------------
+
+
 SPHERE
-	position = (-7, 9, 80)
+	position = (-2, 7, 80)
 	rayon = 5
 	name = "first"
 	color = (255, 0, 255)
 ------------
-
-SPHERE
-	position = (13, 0, 70)
-	rayon = 5
-	color = (24, 200, 150)
 
 CYLINDER
 	position = (15, 0, 110)
@@ -35,14 +38,9 @@ CYLINDER
 	color = (0, 255, 0)
 
 PLAN
-	position = (0, 0, 0)
+	position = (0, -5, 0)
 	direction = HORIZONTAL
 	color = (240, 140, 30)
-
-PLAN
-	position = (0, 0, 170)
-	direction = VERTICAL
-	color = (40, 140, 30)
 
 SPHERE
 	position = (0, 5, 100)
