@@ -42,27 +42,28 @@ static void	get_light_norm(t_obj *light, t_vect *imp)
 int		calc_shadow(t_obj *light, t_calc *v, t_obj *current)
 {
 	t_obj	*tmp;
-	int		chck;
 
-	chck = 0;
 	tmp = light;
-	while (tmp && chck == 0)
+	while (tmp)
 	{
-		if (tmp->obj_type == SPHERE && tmp != current &&
+		if (tmp->obj_type != LIGHT && tmp->obj_type != CAMERA)
+		{
+			if (tmp->obj_type == SPHERE && tmp != current &&
 				check_sphere(light, v, tmp) && v->t <= 0.99999999)
-				chck = 1;
-		else if (tmp->obj_type == PLAN && tmp != current &&
+				return (1);
+			else if (tmp->obj_type == PLAN && tmp != current &&
 				check_plan(light, v, tmp) && v->t <= 0.99999999)
-				chck = 1;
-		else if (tmp->obj_type == CONE && tmp != current &&
+				return (1);
+			else if (tmp->obj_type == CONE && tmp != current &&
 				check_cone(light, v, tmp) && v->t <= 0.99999999)
-				chck = 1;
-		else if (tmp->obj_type == CYLINDER && tmp != current &&
+				return (1);
+			else if (tmp->obj_type == CYLINDER && tmp != current &&
 				check_cylinder(light, v, tmp) && v->t <= 0.99999999)
-			chck = 1;
+				return (1);
+		}
 		tmp = tmp->next;
 	}
-	return (chck);
+	return (0);
 }
 
 int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_vect *vect)

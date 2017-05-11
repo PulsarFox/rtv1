@@ -96,7 +96,7 @@ t_vect				*calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj);
 t_vect				*calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj);
 void				parser(int fd, t_obj **obj);
 void				free_list_obj(t_obj *obj);
-int					calc_shadow(t_obj *lght, t_calc *v, t_obj *c);
+int					calc_shadow(t_obj *lght, t_calc *v, t_obj *current);
 void				set_color(t_calc *v, double i);
 /*
 ** CHECKERS

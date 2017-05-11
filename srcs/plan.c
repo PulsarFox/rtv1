@@ -29,8 +29,12 @@ int		check_plan(t_obj *cam, t_calc *v, t_obj *cord)
 	if (dir > 0.00000001 && dir < 20000)
 	{
 		if (v->t <= dir && v->t != 0)
+			return (0);
+		else
+		{
+			v->t = dir;
 			return (1);
-		v->t = dir;
+		}
 	}
 	return (0);
 }

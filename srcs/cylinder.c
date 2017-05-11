@@ -15,11 +15,8 @@ static int		calc_cylinder(t_obj *obj, t_obj *cam, t_calc *v)
 		(cam->pos->z - obj->pos->z);
 	c = pow((cam->pos->x - obj->pos->x), 2) + pow((cam->pos->z -
 		obj->pos->z), 2) - pow(obj->r, 2);
-	if (a == 0.25)
-		det = pow(b, 2) - c;
-	else
-		det = pow(b, 2) - (4 * a * c);
-	if (det <= 0)
+	det = pow(b, 2) - (4 * a * c);
+	if (det <= 0.00000001)
 		return (0);
 	v->dist1 = (-b + sqrt(det)) / (2 * a);
 	v->dist2 = (-b - sqrt(det)) / (2 * a);
@@ -56,8 +53,9 @@ int		check_cylinder(t_obj *cam, t_calc *v, t_obj *obj)
 		if (v->dist1 < v->dist2)
 			dist = v->dist1;
 		if (v->t <= dist && v->t > 0.00000001)
-			return (1);
+			return (0);
 		v->t = dist;
+		return (1);
 	}
-	return (1);
+	return (0);
 }

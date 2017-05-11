@@ -36,7 +36,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@make -C libft/
-	@$(CC) -o $(NAME) $(OBJS) $(LIBFT) $(MLXFLAGS) -I $(HEADERS)
+	@$(CC) -o $(NAME) $(OBJS) $(LIBFT) $(MLXFLAGS) -I $(HEADERS) -L ./minilibx_macos/
 	@echo "Executable $(NAME) cree with $(CFLAGS)"
 
 debug: CFLAGS += -g

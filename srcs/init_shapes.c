@@ -37,11 +37,10 @@ void		check_normal(t_obj *obj, t_obj *cam, t_calc *v)
 		obj->dir = copy_vect(calc_cone_norm(cam, v, obj));
 }
 
-void		set_shadows(t_obj *current, t_calc *v, t_obj *cam, t_vect *vect)
+void	set_shadows(t_obj *cam, t_calc *v, t_vect *vect, t_obj *current)
 {
 	t_obj	*light;
 
-	v->count = 0;
 	light = cam;
 	while (light)
 	{
@@ -50,18 +49,18 @@ void		set_shadows(t_obj *current, t_calc *v, t_obj *cam, t_vect *vect)
 			light->dir->x = vect->x - light->pos->x;
 			light->dir->y = vect->y - light->pos->y;
 			light->dir->z = vect->z - light->pos->z;
-			if (calc_shadow(light, v, current) && v->count <= 2)
+			if (calc_shadow(light, v, current))
 			{
 				v->count = v->count + 1;
-				v->blue = v->blue * 0.7;
-				v->green = v->green * 0.7;
-				v->red = v->red * 0.7;
+				v->red = v->red * 0.70;
+				v->green = v->green * 0.70;
+				v->blue = v->blue * 0.70;
 			}
 		}
 		light = light->next;
 	}
 }
-void		set_light(t_obj *current, t_calc *v, t_obj *cam)
+void	set_light(t_obj *obj, t_calc *v, t_obj *cam)
 {
 	t_obj	*light;
 	t_vect	*vect;
@@ -70,15 +69,16 @@ void		set_light(t_obj *current, t_calc *v, t_obj *cam)
 	v->blue = 0;
 	v->green = 0;
 	v->red = 0;
+	v->count = 0;
 	light = cam;
 	vect = get_impact(v, cam);
 	while (light)
 	{
 		if (light->obj_type == LIGHT)
-			calc_light(current, light, v, vect);
+			calc_light(obj, light, v, vect);
 		light = light->next;
 	}
-	set_shadows(current, v, cam, vect);
+	set_shadows(cam, v, vect, obj);
 	free(vect);
 }
 
