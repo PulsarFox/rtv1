@@ -48,9 +48,11 @@ typedef struct		s_vect
 
 typedef struct		s_calc
 {
-	double			t;
+	double			t;	//distance par rapport a la camera
+	double			l;	//distance par rapport a la lumiere
 	t_vect			pix;
 	t_vect			dir;
+	t_vect			pos;
 	t_vect			*imp;
 	double			dist1;
 	double			dist2;
@@ -88,16 +90,19 @@ int					check_plan(t_obj *cam, t_calc *v, t_obj *coord);
 int					check_cylinder(t_obj *cam, t_calc *v, t_obj *coord);
 int					check_cone(t_obj *cam, t_calc *v, t_obj *coord);
 void				check_primitives(t_obj *obj, t_obj *cam,  t_calc *v);
-t_vect				*get_impact(t_calc *v, t_obj *cam);
+t_vect				get_impact(t_calc *v, t_vect pos, t_vect dir);
 void				init_light(t_obj *light);
-int					calc_light(t_obj *obj, t_obj *lht, t_calc *v, t_vect *vct);
-t_vect				*calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj);
-t_vect				*calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj);
-t_vect				*calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj);
+int					calc_light(t_obj *obj, t_obj *lht, t_calc *v, t_vect vct);
+t_vect				calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj);
+t_vect				calc_plan_norm(t_obj *cam, t_calc *v, t_obj *obj);
+t_vect				calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj);
+t_vect				calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj);
 void				parser(int fd, t_obj **obj);
 void				free_list_obj(t_obj *obj);
-int					calc_shadow(t_obj *lght, t_calc *v, t_obj *current);
+int					calc_shadow(t_obj *lht, t_calc *v, t_obj *cur, t_obj *cam);
 void				set_color(t_calc *v, double i);
+t_vect				rotation(t_vect *vect, t_vect *angle);
+t_vect				inv_rotation(t_vect *vect, t_vect *angle);
 /*
 ** CHECKERS
 */
@@ -127,8 +132,8 @@ void				ft_args_error(char *str, int i);
 void				ft_file_error(int i);
 
 double				dot_product(t_vect *v1, t_vect *v2);
-void				normalize(t_vect *vect);
-t_vect				*copy_vect(t_vect *vect);
-t_vect				*new_vect(double x, double y, double z);
+t_vect				normalize(t_vect *vect);
+t_vect				copy_vect(t_vect *vect);
+t_vect				new_vect(double x, double y, double z);
 
 #endif

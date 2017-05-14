@@ -40,17 +40,17 @@ static int		calc_sphere(t_obj *cam, t_calc *v, t_obj *cord)
 	return (1);
 }
 
-t_vect		*calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj)
+t_vect		calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj)
 {
-	t_vect	*base;
-	t_vect	*impc;
-	t_vect	*norm;
+	t_vect	base;
+	t_vect	impc;
+	t_vect	norm;
 
-	impc = get_impact(v, cam);
+	impc = get_impact(v, *cam->pos, *cam->dir);
+	v->imp = &impc;
 	base = copy_vect(obj->pos);
-	norm = new_vect(impc->x - base->x, impc->y - base->y, impc->z - base->z);
-	normalize(norm);
-	free(impc);
+	norm = new_vect(impc.x - base.x, impc.y - base.y, impc.z - base.z);
+	norm = normalize(&norm);
 	return (norm);
 }
 

@@ -14,6 +14,21 @@
 #include "rtv1.h"
 #include <stdio.h>
 
+t_vect	calc_plan_norm(t_obj *cam, t_calc *v, t_obj *obj)
+{
+	t_vect	ret;
+	t_vect	impact;
+
+	v->pos = inv_rotation(cam->pos, obj->rot);
+	v->dir = inv_rotation(cam->dir, obj->rot);
+	impact = get_impact(v, v->pos, v->dir);
+	v->imp = &impact;
+	ret.x = obj->dir->x;
+	ret.y = obj->dir->y;
+	ret.z = obj->dir->z;
+	return (ret);
+}
+
 int		check_plan(t_obj *cam, t_calc *v, t_obj *cord)
 {
 	double		dir;

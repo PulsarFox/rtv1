@@ -15,12 +15,12 @@
 #include <stdio.h>
 #include <math.h>
 
-t_vect	*get_impact(t_calc *v, t_obj *cam)
+t_vect	get_impact(t_calc *v, t_vect pos, t_vect dir)
 {
-	t_vect	*vect;
+	t_vect	vect;
 
-	vect = new_vect((cam->pos->x + (cam->dir->x * v->t)), (cam->pos->y +
-				(cam->dir->y * v->t)), (cam->pos->z + (cam->dir->z * v->t)));
+	vect = new_vect((pos.x + (dir.x * v->t)), (pos.y + (dir.y * v->t)),
+		(pos.z + (dir.z * v->t)));
 	return (vect);
 }
 
@@ -31,19 +31,22 @@ void	set_color(t_calc *v, double color)
 	v->red = color;
 }
 
-static void	get_light_norm(t_obj *light, t_vect *imp)
+static t_vect	get_light_norm(t_obj *light, t_vect imp)
 {
-	light->dir->x = light->pos->x - imp->x;
-	light->dir->y = light->pos->y - imp->y;
-	light->dir->z = light->pos->z - imp->z;
-	normalize(light->dir);
+	t_vect	normal;
+
+	light->dir->x = light->pos->x - imp.x;
+	light->dir->y = light->pos->y - imp.y;
+	light->dir->z = light->pos->z - imp.z;
+	normal = normalize(light->dir);
+	return (normal);
 }
 
-int		calc_shadow(t_obj *light, t_calc *v, t_obj *current)
+int		calc_shadow(t_obj *light, t_calc *v, t_obj *current, t_obj *lstobj)
 {
 	t_obj	*tmp;
 
-	tmp = light;
+	tmp = lstobj;
 	while (tmp)
 	{
 		if (tmp->obj_type != LIGHT && tmp->obj_type != CAMERA)
@@ -66,7 +69,7 @@ int		calc_shadow(t_obj *light, t_calc *v, t_obj *current)
 	return (0);
 }
 
-int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_vect *vect)
+int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_vect vect)
 {
 	double	theta;
 
@@ -75,7 +78,7 @@ int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_vect *vect)
 		set_color(v, 0);
 		return (0);
 	}
-	get_light_norm(light, vect);
+	*light->dir = get_light_norm(light, vect);
 	theta = dot_product(light->dir, obj->dir);
 	if (v->theta < theta)
 	{

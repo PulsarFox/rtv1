@@ -30,14 +30,16 @@ void		calc_dist(t_obj *obj, t_obj *cam, t_calc *v)
 void		check_normal(t_obj *obj, t_obj *cam, t_calc *v)
 {
 	if (obj->obj_type == SPHERE)
-		obj->dir = copy_vect(calc_sphere_norm(cam, v, obj));
+		*obj->dir = calc_sphere_norm(cam, v, obj);
+	else if (obj->obj_type == PLAN)
+		*obj->dir = calc_plan_norm(cam, v, obj);
 	else if (obj->obj_type == CYLINDER)
-		obj->dir = copy_vect(calc_cylinder_norm(cam, v, obj));
+		*obj->dir = calc_cylinder_norm(cam, v, obj);
 	else if (obj->obj_type == CONE)
-		obj->dir = copy_vect(calc_cone_norm(cam, v, obj));
+		*obj->dir = calc_cone_norm(cam, v, obj);
 }
 
-void	set_shadows(t_obj *cam, t_calc *v, t_vect *vect, t_obj *current)
+void	set_shadows(t_obj *cam, t_calc *v, t_vect vect, t_obj *current)
 {
 	t_obj	*light;
 
@@ -46,12 +48,11 @@ void	set_shadows(t_obj *cam, t_calc *v, t_vect *vect, t_obj *current)
 	{
 		if (light->obj_type == LIGHT)
 		{
-			light->dir->x = vect->x - light->pos->x;
-			light->dir->y = vect->y - light->pos->y;
-			light->dir->z = vect->z - light->pos->z;
-			if (calc_shadow(light, v, current))
+			light->dir->x = vect.x - light->pos->x;
+			light->dir->y = vect.y - light->pos->y;
+			light->dir->z = vect.z - light->pos->z;
+			if (calc_shadow(light, v, current, cam))
 			{
-				v->count = v->count + 1;
 				v->red = v->red * 0.70;
 				v->green = v->green * 0.70;
 				v->blue = v->blue * 0.70;
@@ -63,7 +64,7 @@ void	set_shadows(t_obj *cam, t_calc *v, t_vect *vect, t_obj *current)
 void	set_light(t_obj *obj, t_calc *v, t_obj *cam)
 {
 	t_obj	*light;
-	t_vect	*vect;
+	t_vect	vect;
 
 	v->theta = 0;
 	v->blue = 0;
@@ -71,15 +72,25 @@ void	set_light(t_obj *obj, t_calc *v, t_obj *cam)
 	v->red = 0;
 	v->count = 0;
 	light = cam;
-	vect = get_impact(v, cam);
+	vect = *v->imp;
 	while (light)
 	{
 		if (light->obj_type == LIGHT)
+		{
 			calc_light(obj, light, v, vect);
+			light->dir->x = vect.x - light->pos->x;
+			light->dir->y = vect.y - light->pos->y;
+			light->dir->z = vect.z - light->pos->z;
+			if (calc_shadow(light, v, obj, cam))
+			{
+				v->red = v->red * 0.70;
+				v->green = v->green * 0.70;
+				v->blue = v->blue * 0.70;
+			}
+		}
 		light = light->next;
 	}
-	set_shadows(cam, v, vect, obj);
-	free(vect);
+	//set_shadows(cam, v, vect, obj);
 }
 
 void		check_primitives(t_obj *obj, t_obj *cam, t_calc *v)

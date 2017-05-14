@@ -24,37 +24,35 @@ LIGHT
 	name = "light2"
 ------------
 
-SPHERE
-	position = (0, 7, 80)
+CYLINDER
+	position = (0, 0, 90)
 	rayon = 5
-	name = "first"
-	color = (255, 0, 255)
-------------
+	color = (23, 244, 12)
 
 CYLINDER
-	position = (20, 0, 110)
+	position = (15, 10, 110)
 	rayon = 5
-	color = (0, 255, 0)
+	color = (13, 114, 255)
 
 PLAN
-	position = (0, -5, 0)
+	position = (0, -10, 0)
 	direction = HORIZONTAL
-	color = (240, 140, 30)
+	color = (240, 255, 10)
 
 PLAN
-	position = (0, -5, 170)
+	position = (0, 0, 200)
 	direction = VERTICAL
-	color = (2, 240, 30)
-
-
-SPHERE
-	position = (10, 5, 100)
-	rayon = 5
-	color = (255, 255, 255)
+	color = (99, 223, 196)
 
 ********************
 
 -Fichier a lire entre les ************
-
--Si pas de noms sur les objets -> noms par defauts donc
 -osef des espaces entres les lignes
+
+TRUC / REGLES A AJOUTER
+
+Une seule camera 
+Mettre les lumieres et ensuite les formes
+Bugfix le parser pour ajouter un titre / phrases avant les premiers pointilles
+NE pas faire le calcul d'une ombre quand le theta de la lumiere correspondante est negatif
+

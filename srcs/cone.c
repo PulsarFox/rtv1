@@ -37,16 +37,16 @@ static int		calc_cone(t_obj *cam, t_calc *v, t_obj *obj)
 	return (1);
 }
 
-t_vect		*calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj)
+t_vect		calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj)
 {
-	t_vect	*base;
-	t_vect	*impc;
-	t_vect	*normal;
+	t_vect	base;
+	t_vect	impc;
+	t_vect	normal;
 
-	impc = get_impact(v, cam);
+	impc = get_impact(v, *cam->pos, *cam->dir);
 	base = copy_vect(obj->pos);
-	normal = new_vect(impc->x - base->x, impc->y - base->y, impc->z - base->z);
-	normalize(normal);
+	normal = new_vect(impc.x - base.x, impc.y - base.y, impc.z - base.z);
+	normal = normalize(&normal);
 	return (normal);
 }
 
