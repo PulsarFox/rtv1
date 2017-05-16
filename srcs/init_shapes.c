@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/27 14:19:32 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/09 19:58:58 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/16 14:29:40 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	set_shadows(t_obj *cam, t_calc *v, t_vect vect, t_obj *current)
 			light->dir->x = vect.x - light->pos->x;
 			light->dir->y = vect.y - light->pos->y;
 			light->dir->z = vect.z - light->pos->z;
+			
 			if (calc_shadow(light, v, current, cam))
 			{
 				v->red = v->red * 0.70;
@@ -70,27 +71,16 @@ void	set_light(t_obj *obj, t_calc *v, t_obj *cam)
 	v->blue = 0;
 	v->green = 0;
 	v->red = 0;
-	v->count = 0;
 	light = cam;
 	vect = *v->imp;
 	while (light)
 	{
 		if (light->obj_type == LIGHT)
-		{
 			calc_light(obj, light, v, vect);
-			light->dir->x = vect.x - light->pos->x;
-			light->dir->y = vect.y - light->pos->y;
-			light->dir->z = vect.z - light->pos->z;
-			if (calc_shadow(light, v, obj, cam))
-			{
-				v->red = v->red * 0.70;
-				v->green = v->green * 0.70;
-				v->blue = v->blue * 0.70;
-			}
-		}
 		light = light->next;
 	}
-	//set_shadows(cam, v, vect, obj);
+	vect = get_impact(v, *cam->pos, *cam->dir);
+	set_shadows(cam, v, vect, obj);
 }
 
 void		check_primitives(t_obj *obj, t_obj *cam, t_calc *v)

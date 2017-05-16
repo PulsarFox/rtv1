@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 12:57:14 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/09 19:40:12 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/15 21:52:13 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,8 @@ t_vect	calc_plan_norm(t_obj *cam, t_calc *v, t_obj *obj)
 	t_vect	ret;
 	t_vect	impact;
 
-	v->pos = inv_rotation(cam->pos, obj->rot);
-	v->dir = inv_rotation(cam->dir, obj->rot);
-	impact = get_impact(v, v->pos, v->dir);
+	impact = get_impact(v, *cam->pos, *cam->dir);
+//	impact = rotation(&impact, obj->rot);
 	v->imp = &impact;
 	ret.x = obj->dir->x;
 	ret.y = obj->dir->y;

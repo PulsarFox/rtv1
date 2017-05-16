@@ -9,14 +9,18 @@ static int		calc_cylinder(t_obj *obj, t_obj rcam, t_calc *v)
 	double	b;
 	double	c;
 	double	det;
+	t_vect	rot;
+	t_vect	tmp;
+	t_vect	tmp2;
 
-	v->pos = inv_rotation(rcam.pos, obj->rot);
-	v->dir = inv_rotation(rcam.dir, obj->rot);
-	a = (pow(v->dir.x, 2) + pow(v->dir.z, 2));
-	b = 2 * v->dir.x * (v->pos.x - obj->pos->x) + 2 * v->dir.z *
-		(v->pos.z - obj->pos->z);
-	c = pow((v->pos.x - obj->pos->x), 2) + pow((v->pos.z -
-		obj->pos->z), 2) - pow(obj->r, 2);
+	tmp = rotation(rcam.dir, obj->rot);
+	tmp2 = copy_vect(rcam.pos);
+	rot = new_vect(tmp2.x - obj->pos->x, tmp2.y - obj->pos->y,
+			tmp2.z - obj->pos->z);
+	rot = rotation(&rot, obj->rot);
+	a = (pow(tmp.x, 2) + pow(tmp.z, 2));
+	b = (2 * tmp.x * rot.x) + (2 * tmp.z * rot.z);
+	c = pow(rot.x, 2) + pow(rot.z, 2) - pow(obj->r, 2);
 	det = pow(b, 2) - (4 * a * c);
 	if (det <= 0.00000001)
 		return (0);
@@ -27,19 +31,13 @@ static int		calc_cylinder(t_obj *obj, t_obj rcam, t_calc *v)
 
 t_vect		calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj)
 {
-	t_vect	base;
 	t_vect	impact;
 	t_vect	norm;
 
-	v->pos = inv_rotation(cam->pos, obj->rot);
-	v->dir = inv_rotation(cam->dir, obj->rot);
-	impact = get_impact(v, v->pos, v->dir);
+	impact = get_impact(v, *cam->pos, *cam->dir);
+	impact = rotation(&impact, obj->rot);
 	v->imp = &impact;
-	base = copy_vect(obj->pos);
-	base.y = impact.y;
-	norm = new_vect(impact.x - base.x, impact.y - base.y, impact.z -
-		base.z);
-	norm = inv_rotation(&norm, obj->rot);
+	norm = new_vect(impact.x - obj->pos->x, 0, impact.z - obj->pos->z);
 	norm = normalize(&norm);
 	return (norm);
 }

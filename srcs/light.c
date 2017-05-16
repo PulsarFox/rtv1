@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 18:08:22 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/09 20:08:16 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/15 18:53:34 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,15 @@ int		calc_shadow(t_obj *light, t_calc *v, t_obj *current, t_obj *lstobj)
 int		calc_light(t_obj *obj, t_obj *light, t_calc *v, t_vect vect)
 {
 	double	theta;
+	t_vect	l_norm;
 
 	if (obj == NULL)
 	{
 		set_color(v, 0);
 		return (0);
 	}
-	*light->dir = get_light_norm(light, vect);
-	theta = dot_product(light->dir, obj->dir);
+	l_norm = get_light_norm(light, vect);
+	theta = dot_product(&l_norm, obj->dir);
 	if (v->theta < theta)
 	{
 		v->theta = theta;

@@ -7,12 +7,6 @@ CAMERA
 ------------
 
 LIGHT
-	position = (-30, 70, 90)
-	color = (1, 1, 1)
-	name = "light1"
-------------
-
-LIGHT
 	position = (0, 50, 50)
 	color = (1, 1, 1)
 	name = "light2"
@@ -25,24 +19,20 @@ LIGHT
 ------------
 
 CYLINDER
+	position = (20, 10, 110)
+	rayon = 5
+	color = (13, 114, 255)
+	rotation = (0, 0, 60)
+
+CYLINDER
 	position = (0, 0, 90)
 	rayon = 5
 	color = (23, 244, 12)
 
-CYLINDER
-	position = (15, 10, 110)
-	rayon = 5
-	color = (13, 114, 255)
-
 PLAN
 	position = (0, -10, 0)
 	direction = HORIZONTAL
-	color = (240, 255, 10)
-
-PLAN
-	position = (0, 0, 200)
-	direction = VERTICAL
-	color = (99, 223, 196)
+	color = (123, 32, 200)
 
 ********************
 
