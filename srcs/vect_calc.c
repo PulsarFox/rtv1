@@ -2,11 +2,14 @@
 #include <math.h>
 #include <stdlib.h>
 
-double		dot_product(t_vect *v1, t_vect *v2)
+double		dot_product(t_vect *v1, t_vect *v2, int i)
 {
 	double	ret;
 
-	ret = v1->x * v2->x + v1->y * v2->y + v1->z * v2->z;
+	if (i == PLAN)
+		ret = v1->x * v2->xt + v1->y * v2->yt + v1->z * v2->zt;
+	else
+		ret = v1->x * v2->x + v1->y * v2->y + v1->z * v2->z;
 	return (ret);
 }
 
@@ -41,3 +44,4 @@ t_vect		new_vect(double x, double y, double z)
 	ret.z = z;
 	return (ret);
 }
+

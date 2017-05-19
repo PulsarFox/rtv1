@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/27 14:41:26 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/15 16:11:28 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/19 19:29:40 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void		pos_calc(int x, int y, t_calc *v, t_obj *cam)
 	tmp.x = v->pix.x - cam->pos->x;
 	tmp.y = v->pix.y - cam->pos->y;
 	tmp.z = v->pix.z - cam->pos->z;
-	norm = 1 / sqrt(dot_product(&tmp, &tmp));
+	norm = 1 / sqrt(dot_product(&tmp, &tmp, 0));
 	cam->dir->x = tmp.x * norm;
 	cam->dir->y = tmp.y * norm;
 	cam->dir->z = tmp.z * norm;

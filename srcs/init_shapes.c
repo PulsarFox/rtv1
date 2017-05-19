@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/27 14:19:32 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/16 14:29:40 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/19 19:44:57 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,60 +27,64 @@ void		calc_dist(t_obj *obj, t_obj *cam, t_calc *v)
 		check_cone(cam, v, obj);
 }
 
-void		check_normal(t_obj *obj, t_obj *cam, t_calc *v)
+void		check_normal(t_obj *obj, t_vect impact)
 {
 	if (obj->obj_type == SPHERE)
-		*obj->dir = calc_sphere_norm(cam, v, obj);
+		*obj->dir = calc_sphere_norm(obj, impact);
 	else if (obj->obj_type == PLAN)
-		*obj->dir = calc_plan_norm(cam, v, obj);
+		*obj->dir = calc_plan_norm(obj, impact);
 	else if (obj->obj_type == CYLINDER)
-		*obj->dir = calc_cylinder_norm(cam, v, obj);
+		*obj->dir = calc_cylinder_norm(obj, impact);
 	else if (obj->obj_type == CONE)
-		*obj->dir = calc_cone_norm(cam, v, obj);
+		*obj->dir = calc_cone_norm(obj, impact);
 }
 
-void	set_shadows(t_obj *cam, t_calc *v, t_vect vect, t_obj *current)
+void	set_shadows(t_calc *v, int l)
 {
-	t_obj	*light;
+	int		i;
 
-	light = cam;
-	while (light)
+	i = l;
+	while (i > 0)
 	{
-		if (light->obj_type == LIGHT)
-		{
-			light->dir->x = vect.x - light->pos->x;
-			light->dir->y = vect.y - light->pos->y;
-			light->dir->z = vect.z - light->pos->z;
-			
-			if (calc_shadow(light, v, current, cam))
-			{
-				v->red = v->red * 0.70;
-				v->green = v->green * 0.70;
-				v->blue = v->blue * 0.70;
-			}
-		}
-		light = light->next;
+		v->red = v->red * 0.70;
+		v->blue = v->blue * 0.70;
+		v->green = v->green * 0.70;
+		i--;
 	}
 }
+
 void	set_light(t_obj *obj, t_calc *v, t_obj *cam)
 {
 	t_obj	*light;
 	t_vect	vect;
+	int		k;
+	int		l;
+	t_vect	l_normal;
 
 	v->theta = 0;
 	v->blue = 0;
 	v->green = 0;
 	v->red = 0;
 	light = cam;
-	vect = *v->imp;
+	k = 0;
+	l = 0;
+	vect = get_impact(v, cam->pos, cam->dir);
+	check_normal(obj, vect);
 	while (light)
 	{
 		if (light->obj_type == LIGHT)
-			calc_light(obj, light, v, vect);
+		{
+			l_normal = new_vect(vect.x - light->pos->x, vect.y -
+					light->pos->y, vect.z - light->pos->z);
+			light->dir = &l_normal;
+			k = calc_shadow(light, v, obj, cam);
+//			l_normal = new_vect(light->pos->x - vect.x, light->pos->y -
+//					vect.y, light->pos->z - vect.z);
+			l = l + calc_light(obj, light, v, k);
+		}
 		light = light->next;
 	}
-	vect = get_impact(v, *cam->pos, *cam->dir);
-	set_shadows(cam, v, vect, obj);
+	set_shadows(v, l);
 }
 
 void		check_primitives(t_obj *obj, t_obj *cam, t_calc *v)
@@ -107,10 +111,7 @@ void		check_primitives(t_obj *obj, t_obj *cam, t_calc *v)
 	}
 	v->t = dist;
 	if (closer != NULL)
-	{
-		check_normal(closer, cam, v);
 		set_light(closer, v, cam);
-	}
 	else
 		set_color(v, 0);
 }

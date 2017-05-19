@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 18:35:53 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/15 21:57:43 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/19 22:44:37 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # define SPHERE 3
 # define CONE 4
 # define CYLINDER 5
+# define COEFF 200000
 
 typedef struct		s_env
 {
@@ -44,6 +45,9 @@ typedef struct		s_vect
 	double			x;
 	double			y;
 	double			z;
+	double			xt;
+	double			yt;
+	double			zt;
 }					t_vect;
 
 typedef struct		s_calc
@@ -90,13 +94,13 @@ int					check_plan(t_obj *cam, t_calc *v, t_obj *coord);
 int					check_cylinder(t_obj *cam, t_calc *v, t_obj *coord);
 int					check_cone(t_obj *cam, t_calc *v, t_obj *coord);
 void				check_primitives(t_obj *obj, t_obj *cam,  t_calc *v);
-t_vect				get_impact(t_calc *v, t_vect pos, t_vect dir);
+t_vect				get_impact(t_calc *v, t_vect *pos, t_vect *dir);
 void				init_light(t_obj *light);
-int					calc_light(t_obj *obj, t_obj *lht, t_calc *v, t_vect vct);
-t_vect				calc_sphere_norm(t_obj *cam, t_calc *v, t_obj *obj);
-t_vect				calc_plan_norm(t_obj *cam, t_calc *v, t_obj *obj);
-t_vect				calc_cylinder_norm(t_obj *cam, t_calc *v, t_obj *obj);
-t_vect				calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj);
+int					calc_light(t_obj *obj, t_obj *lht, t_calc *v, int k);
+t_vect				calc_sphere_norm(t_obj *o, t_vect i);
+t_vect				calc_plan_norm(t_obj *o, t_vect imp);
+t_vect				calc_cylinder_norm(t_obj *o, t_vect i);
+t_vect				calc_cone_norm(t_obj *o, t_vect i);
 void				parser(int fd, t_obj **obj);
 void				free_list_obj(t_obj *obj);
 int					calc_shadow(t_obj *lht, t_calc *v, t_obj *cur, t_obj *cam);
@@ -131,7 +135,7 @@ void				ft_malloc_error(void);
 void				ft_args_error(char *str, int i);
 void				ft_file_error(int i);
 
-double				dot_product(t_vect *v1, t_vect *v2);
+double				dot_product(t_vect *v1, t_vect *v2, int i);
 t_vect				normalize(t_vect *vect);
 t_vect				copy_vect(t_vect *vect);
 t_vect				new_vect(double x, double y, double z);

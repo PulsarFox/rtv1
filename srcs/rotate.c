@@ -61,8 +61,8 @@ t_vect	inv_rotation(t_vect *vect, t_vect *angle)
 {
 	t_vect	ret;
 
-	ret = rot_z(vect, -(angle->z));
+	ret = rot_x(vect, -(angle->x));
 	ret = rot_y(&ret, -(angle->y));
-	ret = rot_x(&ret, -(angle->x));
+	ret = rot_z(&ret, -(angle->z));
 	return (ret);
 }

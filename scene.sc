@@ -1,31 +1,37 @@
 ***************************
 ##########
 CAMERA
-	position = (0, 10, 0)
+	position = (0, 10, -200)
 	direction = DEFAULT
 ##########
 ------------
 
 LIGHT
-	position = (0, 50, 50)
-	color = (1, 1, 1)
-	name = "light2"
-------------
-
-LIGHT
-	position = (40, 70, 140)
+	position = (20, 40, 100)
 	color = (1, 1, 1)
 	name = "light2"
 ------------
 
 CYLINDER
-	position = (20, 10, 110)
-	rayon = 5
+	position = (15, 10, 120)
+	rayon = 10
 	color = (13, 114, 255)
-	rotation = (0, 0, 60)
+	rotation = (0, 0, 90)
 
 CYLINDER
-	position = (0, 0, 90)
+	position = (-10, 30, 140)
+	rayon = 5
+	color = (255, 114, 255)
+	rotation = (0, 0, 180)
+
+CYLINDER
+	position = (30, 30, 160)
+	rayon = 5
+	color = (0, 255, 255)
+	rotation = (0, 0, 45)
+
+CYLINDER
+	position = (0, 0, 100)
 	rayon = 5
 	color = (23, 244, 12)
 

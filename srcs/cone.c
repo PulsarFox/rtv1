@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/09 15:28:03 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/09 17:16:58 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/18 18:32:17 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,14 @@ static int		calc_cone(t_obj *cam, t_calc *v, t_obj *obj)
 	return (1);
 }
 
-t_vect		calc_cone_norm(t_obj *cam, t_calc *v, t_obj *obj)
+t_vect		calc_cone_norm(t_obj *obj, t_vect impact)
 {
-	t_vect	base;
-	t_vect	impc;
-	t_vect	normal;
+	t_vect	norm;
 
-	impc = get_impact(v, *cam->pos, *cam->dir);
-	base = copy_vect(obj->pos);
-	normal = new_vect(impc.x - base.x, impc.y - base.y, impc.z - base.z);
-	normal = normalize(&normal);
-	return (normal);
+	norm = new_vect(impact.x - obj->pos->x, impact.y - obj->pos->y, impact.z -
+			obj->pos->z);
+	norm = normalize(&norm);
+	return (norm);
 }
 
 int		check_cone(t_obj *cam, t_calc *v, t_obj *obj)
