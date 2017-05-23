@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/09 15:28:03 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/18 18:32:17 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/23 20:28:45 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,17 @@ static int		calc_cone(t_obj *cam, t_calc *v, t_obj *obj)
 	double	b;
 	double	c;
 	double	det;
+	t_vect	rot;
+	t_vect	tmp;
+	double	angle;
 
-	a = -pow(cam->dir->x, 2) + pow(cam->dir->y, 2) + pow(cam->dir->z, 2);
-	b = 2 * (-(cam->dir->x * (cam->pos->x - obj->pos->x)) + cam->dir->y *
-				(cam->pos->y - obj->pos->y) + cam->dir->z * (cam->pos->z -
-					obj->pos->z));
-	c = -pow((cam->pos->x - obj->pos->x), 2) + pow((cam->pos->y -
-			obj->pos->y), 2) + pow((cam->pos->z - obj->pos->z), 2);
+	tmp = rotation(cam->dir, obj->rot);
+	rot = new_vect(cam->pos->x - obj->pos->x, cam->pos->y - obj->pos->y,
+			cam->pos->z - obj->pos->z);
+	angle = tan(obj->r * (M_PI / 180));
+	a = pow(tmp.z, 2) + pow(tmp.x, 2) - pow(tmp.y, 2) * angle;
+	b = 2 * (tmp.z * rot.z + tmp.x * rot.x - (tmp.y * rot.y * angle));
+	c = pow(rot.x, 2) + pow(rot.z, 2) - pow(rot.y, 2) * angle;
 	if (a == 0.25)
 		det = pow(b, 2) - c;
 	else
@@ -40,9 +44,17 @@ static int		calc_cone(t_obj *cam, t_calc *v, t_obj *obj)
 t_vect		calc_cone_norm(t_obj *obj, t_vect impact)
 {
 	t_vect	norm;
+	t_vect	base;
+	t_vect	tmp;
+	double	angle;
 
-	norm = new_vect(impact.x - obj->pos->x, impact.y - obj->pos->y, impact.z -
-			obj->pos->z);
+	angle = tan(obj->r * (M_PI / 180));
+	base = copy_vect(obj->pos);
+	tmp = copy_vect(&impact);
+	tmp = rotation(&impact, obj->rot);
+	base = rotation(obj->pos, obj->rot);
+	norm = new_vect(base.x - tmp.x, (base.y - tmp.y) * -angle, base.z - tmp.z);
+	norm = inv_rotation(&norm, obj->rot);
 	norm = normalize(&norm);
 	return (norm);
 }

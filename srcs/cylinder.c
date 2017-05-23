@@ -35,9 +35,10 @@ t_vect		calc_cylinder_norm(t_obj *obj, t_vect impact)
 
 	base = copy_vect(obj->pos);
 	tmp = rotation(&impact, obj->rot);
-	base = rotation(&base, obj->rot);
+	base = rotation(obj->pos, obj->rot);
 	base.y = tmp.y;
 	norm = new_vect(base.x - tmp.x, base.y - tmp.y, base.z - tmp.z);
+	norm = inv_rotation(&norm, obj->rot);
 	norm = normalize(&norm);
 	return (norm);
 }
