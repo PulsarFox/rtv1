@@ -2,36 +2,33 @@
 #include <math.h>
 #include <stdlib.h>
 
-double		dot_product(t_vect *v1, t_vect *v2, int i)
+double		dot_product(t_vect v1, t_vect v2)
 {
 	double	ret;
 
-	if (i == PLAN)
-		ret = v1->x * v2->xt + v1->y * v2->yt + v1->z * v2->zt;
-	else
-		ret = v1->x * v2->x + v1->y * v2->y + v1->z * v2->z;
+	ret = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 	return (ret);
 }
 
-t_vect		normalize(t_vect *v1)
+t_vect		normalize(t_vect v1)
 {
 	double	norme;
 	t_vect	ret;
 
-	norme = 1 / sqrt((pow(v1->x, 2) + pow(v1->y, 2) + pow(v1->z, 2)));
-	ret.x = norme * v1->x;
-	ret.y = norme * v1->y;
-	ret.z = norme * v1->z;
+	norme = 1 / sqrt((pow(v1.x, 2) + pow(v1.y, 2) + pow(v1.z, 2)));
+	ret.x = norme * v1.x;
+	ret.y = norme * v1.y;
+	ret.z = norme * v1.z;
 	return (ret);
 }
 
-t_vect		copy_vect(t_vect *v)
+t_vect		copy_vect(t_vect v)
 {
 	t_vect	ret;
 
-	ret.x = v->x;
-	ret.y = v->y;
-	ret.z = v->z;
+	ret.x = v.x;
+	ret.y = v.y;
+	ret.z = v.z;
 	return (ret);
 }
 

@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 19:16:12 by savincen          #+#    #+#             */
-/*   Updated: 2017/04/13 19:17:07 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/24 18:42:16 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,21 @@
 #include <stdio.h>
 void	set_null(t_obj *obj)
 {
-	obj->pos = (t_vect *)malloc(sizeof(t_vect));
-	obj->pos->x = 0;
-	obj->pos->y = 0;
-	obj->pos->z = 0;
+	obj->pos.x = 0;
+	obj->pos.y = 0;
+	obj->pos.z = 0;
 	obj->index = 0;
-	obj->r = 0;
+	obj->r = 1;
 	obj->name = NULL;
-	obj->dir = (t_vect *)malloc(sizeof(t_vect));
-	obj->dir->x = 0;
-	obj->dir->y = 0;
-	obj->dir->z = 1;
-	obj->color = (t_vect *)malloc(sizeof(t_vect));
-	obj->color->x = 255;
-	obj->color->y = 255;
-	obj->color->z = 255;
-	obj->rot = (t_vect *)malloc(sizeof(t_vect));
-	obj->rot->x = 0;
-	obj->rot->y = 0;
-	obj->rot->z = 0;
+	obj->dir.x = 0;
+	obj->dir.y = 0;
+	obj->dir.z = 0;
+	obj->color.x = 255;
+	obj->color.y = 255;
+	obj->color.z = 255;
+	obj->rot.x = 0;
+	obj->rot.y = 0;
+	obj->rot.z = 0;
 	obj->next = NULL;
 }
 

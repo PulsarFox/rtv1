@@ -6,7 +6,7 @@
 #    By: savincen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/12/03 14:19:49 by savincen          #+#    #+#              #
-#    Updated: 2017/05/15 14:28:44 by savincen         ###   ########.fr        #
+#    Updated: 2017/05/24 17:09:50 by savincen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SRCS_DIR = ./srcs/
 SRCS_NAME = rtv1.c raytracer.c init_shapes.c keys.c sphere.c plan.c light.c \
 			parser.c checkers.c get_primitive_list_1.c get_primitive_list_2.c \
 			parsing_reader.c parsing_tools.c errors.c verif_list.c cylinder.c \
-			cone.c vect_calc.c rotate.c
+			cone.c vect_calc.c rotate.c shadow.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAME))
 OBJS=$(SRCS:.c=.o)

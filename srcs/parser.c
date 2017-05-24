@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 20:25:05 by savincen          #+#    #+#             */
-/*   Updated: 2017/04/13 19:53:08 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/24 18:42:57 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,21 @@ void	objaddend(t_obj **obj, t_obj *new)
 		*obj = new;
 }
 
+static	void	verif_obj(t_obj *obj)
+{
+	if ((obj->obj_type == CYLINDER || obj->obj_type == SPHERE) && obj->r <= 0)
+	{
+		ft_putstr("Rayon must be superior to 0\n");
+		exit(1);
+	}
+	if ((obj->obj_type == PLAN || obj->obj_type == CAMERA) &&
+			obj->dir.x == 0 && obj->dir.y == 0 && obj->dir.z == 0)
+	{
+		ft_putstr("A camera/plan direction is missing\n");
+		exit(1);
+	}
+}
+
 int		parse_objects(char *line, t_obj **obj, int fd, int index)
 {
 	t_obj	*new;
@@ -63,6 +78,7 @@ int		parse_objects(char *line, t_obj **obj, int fd, int index)
 	else
 		return (1);
 	new->index = index;
+	verif_obj(new);
 	objaddend(obj, new);
 	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/27 14:41:26 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/23 20:28:50 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/24 19:13:03 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ void		pos_calc(int x, int y, t_calc *v, t_obj *cam)
 		(1 * v->yind * y);
 	v->pix.z = v->pix_origin.z + (0 * v->xind * x) -
 		(0 * v->yind * y);
-	tmp.x = v->pix.x - cam->pos->x;
-	tmp.y = v->pix.y - cam->pos->y;
-	tmp.z = v->pix.z - cam->pos->z;
-	norm = 1 / sqrt(dot_product(&tmp, &tmp, 0));
-	cam->dir->x = tmp.x * norm;
-	cam->dir->y = tmp.y * norm;
-	cam->dir->z = tmp.z * norm;
+	tmp.x = v->pix.x - cam->pos.x;
+	tmp.y = v->pix.y - cam->pos.y;
+	tmp.z = v->pix.z - cam->pos.z;
+	norm = 1 / sqrt(dot_product(tmp, tmp));
+	cam->dir.x = tmp.x * norm;
+	cam->dir.y = tmp.y * norm;
+	cam->dir.z = tmp.z * norm;
 }
 
 void	init_pos(t_env *e, t_obj *cam, t_calc *v)
@@ -40,13 +40,13 @@ void	init_pos(t_env *e, t_obj *cam, t_calc *v)
 	v->v_pWidth = 0.5;
 	v->v_pHeight = ((double)e->height * v->v_pWidth) / (double)e->width;
 	v->v_pDist = 0.5;
-	v->pix_origin.x = cam->pos->x + ((cam->dir->x * v->v_pDist)
+	v->pix_origin.x = cam->pos.x + ((cam->dir.x * v->v_pDist)
 			+ (0 * (v->v_pHeight / 2.0)))
 				- (1 * (v->v_pWidth / 2.0));
-	v->pix_origin.y = cam->pos->y + ((cam->dir->y * v->v_pDist)
+	v->pix_origin.y = cam->pos.y + ((cam->dir.y * v->v_pDist)
 			+ (1 * (v->v_pHeight / 2.0)))
 				- (0 * (v->v_pWidth / 2.0));
-	v->pix_origin.z = cam->pos->z + ((cam->dir->z * v->v_pDist)
+	v->pix_origin.z = cam->pos.z + ((cam->dir.z * v->v_pDist)
 			+ (0 * (v->v_pHeight / 2.0)))
 				- (0 * (v->v_pWidth / 2.0));
 	v->xind = (v->v_pWidth / (double)e->width);
@@ -56,18 +56,35 @@ void	init_pos(t_env *e, t_obj *cam, t_calc *v)
 static t_obj	*get_camera(t_obj *obj, t_env *e, t_calc *v)
 {
 	t_obj	*cam;
+	int		i;
 
+	i = 0;
 	cam = obj;
 	while (cam)
 	{
 		if (cam->obj_type == CAMERA)
 			break;
+		i++;
 		cam = cam->next;
 	}
+	if (i != 0)
+		ft_file_error(CAMERA);
 	init_pos(e, cam, v);
 	return (cam);
 }
 
+static	void	init_plan_normal(t_obj **obj)
+{
+	t_obj	*tmp;
+
+	tmp = *obj;
+	while (tmp)
+	{
+		if (tmp->obj_type == PLAN)
+			tmp->dir = calc_plan_norm(tmp);
+		tmp = tmp->next;
+	}
+}
 
 void	raytracer(t_env *e, t_calc *v, t_obj *obj)
 {
@@ -78,6 +95,7 @@ void	raytracer(t_env *e, t_calc *v, t_obj *obj)
 
 	y = 0;
 	cam = get_camera(obj, e, v);
+	init_plan_normal(&obj);
 	while (y < e->height)
 	{
 		x = 0;

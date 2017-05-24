@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 18:34:28 by savincen          #+#    #+#             */
-/*   Updated: 2017/04/13 19:54:33 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/24 16:45:27 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int		main(int argc, char **argv)
 	e = init_env();
 	while (tmp)
 	{
-		printf("coord = %f, %f, %f. type = %d. r = %d, dir = %f, %f, %f, color = %f, %f, %f\n", tmp->pos->x, tmp->pos->y, tmp->pos->z, tmp->obj_type, tmp->r, tmp->dir->x, tmp->dir->y, tmp->dir->z, tmp->color->x, tmp->color->y, tmp->color->z);
+		printf("coord = %f, %f, %f. type = %d. r = %f, dir = %f, %f, %f, color = %f, %f, %f\n", tmp->pos.x, tmp->pos.y, tmp->pos.z, tmp->obj_type, tmp->r, tmp->dir.x, tmp->dir.y, tmp->dir.z, tmp->color.x, tmp->color.y, tmp->color.z);
 		tmp = tmp->next;
 	}
 	calc->imp = (t_vect *)malloc(sizeof(t_vect));

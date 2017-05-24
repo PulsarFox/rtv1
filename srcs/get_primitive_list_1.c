@@ -6,13 +6,14 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 18:47:31 by savincen          #+#    #+#             */
-/*   Updated: 2017/04/13 19:17:12 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/24 16:37:37 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
 #include <stdlib.h>
+#include <math.h>
 #include <stdio.h>
 int		parse_camera(int fd, t_obj *obj)
 {
@@ -24,9 +25,9 @@ int		parse_camera(int fd, t_obj *obj)
 	{
 		if (check_type(line) == SPACE || check_type(line) == PARAMETER)
 			read_line(line, obj);
-		obj->dir->x = 0;
-		obj->dir->y = 0;
-		obj->dir->z = 1;
+		obj->dir.x = 0;
+		obj->dir.y = 0;
+		obj->dir.z = 1;
 		if (check_type(line) == DELIMITER)
 			return (2);
 		else if (check_type(line) == TITLE)
@@ -113,6 +114,7 @@ int		parse_cone(int fd, t_obj *obj)
 			ft_syntax_error(line, 1);
 		free(line);
 	}
+	obj->r = tan(obj->r * (M_PI / 180));
 	free(line);
 	return (1);
 }

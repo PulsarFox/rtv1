@@ -13,9 +13,9 @@ static int		calc_cylinder(t_obj *obj, t_obj *rcam, t_calc *v)
 	t_vect	tmp;
 
 	tmp = rotation(rcam->dir, obj->rot);
-	rot = new_vect(rcam->pos->x - obj->pos->x, rcam->pos->y - obj->pos->y,
-			rcam->pos->z - obj->pos->z);
-	rot = rotation(&rot, obj->rot);
+	rot = new_vect(rcam->pos.x - obj->pos.x, rcam->pos.y - obj->pos.y,
+			rcam->pos.z - obj->pos.z);
+	rot = rotation(rot, obj->rot);
 	a = (pow(tmp.x, 2) + pow(tmp.z, 2));
 	b = (2 * tmp.x * rot.x) + (2 * tmp.z * rot.z);
 	c = pow(rot.x, 2) + pow(rot.z, 2) - pow(obj->r, 2);
@@ -33,13 +33,12 @@ t_vect		calc_cylinder_norm(t_obj *obj, t_vect impact)
 	t_vect	base;
 	t_vect	tmp;
 
-	base = copy_vect(obj->pos);
-	tmp = rotation(&impact, obj->rot);
+	tmp = rotation(impact, obj->rot);
 	base = rotation(obj->pos, obj->rot);
 	base.y = tmp.y;
 	norm = new_vect(base.x - tmp.x, base.y - tmp.y, base.z - tmp.z);
-	norm = inv_rotation(&norm, obj->rot);
-	norm = normalize(&norm);
+	norm = inv_rotation(norm, obj->rot);
+	norm = normalize(norm);
 	return (norm);
 }
 
