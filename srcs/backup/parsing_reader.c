@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 14:40:49 by savincen          #+#    #+#             */
-/*   Updated: 2017/06/01 18:21:26 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/04 15:19:14 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "libft.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 
 void	free_conf(char **tab)
 {
@@ -65,9 +64,9 @@ static void		read_line_two(char *line, t_obj *obj)
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->rot.x = (ft_atoi(conf[0]) * (M_PI / 180.0));
-		obj->rot.y = (ft_atoi(conf[1]) * (M_PI / 180.0));
-		obj->rot.z = (ft_atoi(conf[2]) * (M_PI / 180.0));
+		obj->rot->x = ft_atoi(conf[0]);
+		obj->rot->y = ft_atoi(conf[1]);
+		obj->rot->z = ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}
@@ -82,15 +81,15 @@ static void		read_line_two(char *line, t_obj *obj)
 	}
 }
 
-static void		read_line_three(char *line, t_obj *obj, char **conf)
+static void		read_color(char *line, t_obj *obj, char **conf)
 {
 	if (ft_strstr(line, "color"))
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->color.x = ft_atoi(conf[0]);
-		obj->color.y = ft_atoi(conf[1]);
-		obj->color.z = ft_atoi(conf[2]);
+		obj->color->x = ft_atoi(conf[0]);
+		obj->color->y = ft_atoi(conf[1]);
+		obj->color->z = ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}
@@ -98,9 +97,9 @@ static void		read_line_three(char *line, t_obj *obj, char **conf)
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->pos.x = obj->pos.x + ft_atoi(conf[0]);
-		obj->pos.y = obj->pos.y + ft_atoi(conf[1]);
-		obj->pos.z = obj->pos.z + ft_atoi(conf[2]);
+		obj->pos->x = obj->pos->x + ft_atoi(conf[0]);
+		obj->pos->y = obj->pos->y + ft_atoi(conf[1]);
+		obj->pos->z = obj->pos->z + ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}
@@ -115,9 +114,9 @@ void	read_line(char *line, t_obj *obj)
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->pos.x = ft_atoi(conf[0]);
-		obj->pos.y = ft_atoi(conf[1]);
-		obj->pos.z = ft_atoi(conf[2]);
+		obj->pos->x = ft_atoi(conf[0]);
+		obj->pos->y = ft_atoi(conf[1]);
+		obj->pos->z = ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}
@@ -126,6 +125,6 @@ void	read_line(char *line, t_obj *obj)
 	else
 	{
 		read_line_two(line, obj);
-		read_line_three(line, obj, conf);
+		read_color(line, obj, conf);
 	}
 }

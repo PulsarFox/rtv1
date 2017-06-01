@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 18:35:53 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/24 19:13:39 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/30 18:16:07 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ typedef struct		s_calc
 	double			v_pHeight;
 	double			v_pDist;
 	t_vect			pix_origin;
+	t_vect			right;
+	t_vect			up;
 	double			xind;
 	double			yind;
 	double			theta;

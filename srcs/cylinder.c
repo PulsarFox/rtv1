@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cylinder.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/29 15:27:43 by savincen          #+#    #+#             */
+/*   Updated: 2017/06/01 18:21:31 by savincen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rtv1.h"
 #include <math.h>
 #include <stdlib.h>
@@ -34,11 +46,24 @@ t_vect		calc_cylinder_norm(t_obj *obj, t_vect impact)
 	t_vect	tmp;
 
 	tmp = rotation(impact, obj->rot);
+	//tmp = copy_vect(impact);
 	base = rotation(obj->pos, obj->rot);
-	base.y = tmp.y;
-	norm = new_vect(base.x - tmp.x, base.y - tmp.y, base.z - tmp.z);
+	//base = copy_vect(obj->pos);
+	norm = new_vect(base.x - tmp.x, 0, base.z - tmp.z);
+	norm = normalize(norm);/*
+	if (norm.x > 0)
+	{
+		obj->color.x = 255;
+		obj->color.y = 255;
+		obj->color.z = 255;
+	}
+	else
+	{
+		obj->color.x = 244;
+		obj->color.y = 30;
+		obj->color.z = 80;
+	}*/
 	norm = inv_rotation(norm, obj->rot);
-	norm = normalize(norm);
 	return (norm);
 }
 
@@ -56,7 +81,7 @@ int		check_cylinder(t_obj *cam, t_calc *v, t_obj *obj)
 		if (v->dist2 <= dist)
 			dist = v->dist2;
 	}
-	if (dist == 0 || (v->t <= dist && v->t > 0.00000001))
+	if (dist == 0)
 		return (0);
 	v->t = dist;
 	return (1);

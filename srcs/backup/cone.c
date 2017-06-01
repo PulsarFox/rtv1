@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/09 15:28:03 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/30 17:35:35 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/24 16:29:52 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ static int		calc_cone(t_obj *cam, t_calc *v, t_obj *obj)
 	t_vect	tmp;
 
 	tmp = rotation(cam->dir, obj->rot);
-	rot = new_vect(cam->pos.x - obj->pos.x, cam->pos.y - obj->pos.y,
-			cam->pos.z - obj->pos.z);
-	rot = rotation(rot, obj->rot);
+	rot = new_vect(cam->pos->x - obj->pos->x, cam->pos->y - obj->pos->y,
+			cam->pos->z - obj->pos->z);
+	rot = rotation(&rot, obj->rot);
 	a = pow(tmp.z, 2) + pow(tmp.x, 2) - pow(tmp.y, 2) * obj->r;
 	b = 2 * (tmp.z * rot.z + tmp.x * rot.x - (tmp.y * rot.y * obj->r));
 	c = pow(rot.x, 2) + pow(rot.z, 2) - pow(rot.y, 2) * obj->r;
@@ -47,11 +47,11 @@ t_vect		calc_cone_norm(t_obj *obj, t_vect impact)
 	t_vect	base;
 	t_vect	tmp;
 
-	tmp = rotation(impact, obj->rot);
+	tmp = rotation(&impact, obj->rot);
 	base = rotation(obj->pos, obj->rot);
 	norm = new_vect(base.x - tmp.x, (base.y - tmp.y) * -obj->r, base.z - tmp.z);
-	norm = inv_rotation(norm, obj->rot);
-	norm = normalize(norm);
+	norm = inv_rotation(&norm, obj->rot);
+	norm = normalize(&norm);
 	return (norm);
 }
 
@@ -59,18 +59,19 @@ int		check_cone(t_obj *cam, t_calc *v, t_obj *obj)
 {
 	double	dist;
 
-	dist = 0;
 	if (!calc_cone(cam, v, obj))
 		return (0);
-	if (v->dist1 > 0.00000001 && v->dist1 < COEFF)
-		dist = v->dist1;
-	if (v->dist2 > 0.00000001 && v->dist2 < COEFF)
-	{
-		if (v->dist2 <= dist)
-			dist = v->dist2;
-	}
-	if (dist == 0)
+	if (v->dist1 < 0.00000001 && v->dist2 < 0.00000001)
 		return (0);
-	v->t = dist;
-	return (1);
+	if (v->dist1 > 0.00000001 && v->dist2 > 0.00000001)
+	{
+		dist = v->dist2;
+		if (v->dist1 < v->dist2)
+			dist = v->dist1;
+		if (v->t <= dist && v->t > 0.00000001)
+			return (0);
+		v->t = dist;
+		return (1);
+	}
+	return (0);
 }

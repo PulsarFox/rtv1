@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 18:08:22 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/30 18:29:57 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/23 20:28:49 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 #include <stdio.h>
 #include <math.h>
 
-t_vect	get_impact(t_calc *v, t_vect pos, t_vect dir)
+t_vect	get_impact(t_calc *v, t_vect *pos, t_vect *dir)
 {
 	t_vect	vect;
 
-	vect = new_vect((pos.x + (dir.x * v->t)), (pos.y + (dir.y * v->t)),
-		(pos.z + (dir.z * v->t)));
+	vect = new_vect((pos->x + (dir->x * v->t)), (pos->y + (dir->y * v->t)),
+		(pos->z + (dir->z * v->t)));
 	return (vect);
 }
 
@@ -31,34 +31,31 @@ void	set_color(t_calc *v, double color)
 	v->red = color;
 }
 
-void	set_light(t_obj *obj, t_calc *v, t_obj *cam)
+int		calc_shadow(t_obj *light, t_calc *v, t_obj *current, t_obj *lstobj)
 {
-	t_obj	*light;
-	t_vect	vect;
-	int		k;
-	int		l;
+	t_obj	*tmp;
 
-	v->theta = 0;
-	v->blue = 0;
-	v->green = 0;
-	v->red = 0;
-	light = cam;
-	l = 0;
-	k = 0;
-	vect = get_impact(v, cam->pos, cam->dir);
-	check_normal(obj, vect);
-	while (light)
+	tmp = lstobj;
+	while (tmp)
 	{
-		if (light->obj_type == LIGHT)
+		if (tmp->obj_type != LIGHT && tmp->obj_type != CAMERA)
 		{
-			light->dir = new_vect(vect.x - light->pos.x, vect.y -
-					light->pos.y, vect.z - light->pos.z);
-			k = calc_shadow(light, v, obj, cam);
-			l = l + calc_light(obj, light, v, k);
+			if (tmp->obj_type == SPHERE && tmp != current &&
+				check_sphere(light, v, tmp) && v->t <= 0.99999999)
+				return (1);
+			else if (tmp->obj_type == PLAN && tmp != current &&
+				check_plan(light, v, tmp) && v->t <= 0.99999999)
+				return (1);
+			else if (tmp->obj_type == CONE && tmp != current &&
+				check_cone(light, v, tmp) && v->t <= 0.99999999)
+				return (1);
+			else if (tmp->obj_type == CYLINDER && tmp != current &&
+				check_cylinder(light, v, tmp) && v->t <= 0.99999999)
+				return (1);
 		}
-		light = light->next;
+		tmp = tmp->next;
 	}
-	set_shadows(v, l);
+	return (0);
 }
 
 int		calc_light(t_obj *obj, t_obj *light, t_calc *v, int k)
@@ -70,16 +67,16 @@ int		calc_light(t_obj *obj, t_obj *light, t_calc *v, int k)
 	double	blue;
 
 	l_norm = normalize(light->dir);
-	theta = dot_product(l_norm, obj->dir);
+	theta = dot_product(&l_norm, obj->dir, obj->obj_type);
 	if (theta > 0)
 	{
-		if ((red = obj->color.x * light->color.x * theta) > v->red)
+		if ((red = obj->color->x * light->color->x * theta) > v->red)
 			v->red = red;
-		if ((green = obj->color.y * light->color.y * theta) > v->green)
+		if ((green = obj->color->y * light->color->y * theta) > v->green)
 			v->green = green;
-		if ((blue = obj->color.z * light->color.z * theta) > v->blue)
+		if ((blue = obj->color->z * light->color->z * theta) > v->blue)
 			v->blue = blue;
-		if (k > 0)
+		if (k == 1)
 			return (1);
 	}
 	return (0);

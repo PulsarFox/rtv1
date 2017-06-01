@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 12:55:39 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/30 16:17:29 by savincen         ###   ########.fr       */
+/*   Updated: 2017/05/18 19:09:58 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,25 @@
 #include "libft.h"
 #include <stdio.h>
 
-static int		calc_sphere(t_obj *cam, t_calc *v, t_obj *obj)
+static int		calc_sphere(t_obj *cam, t_calc *v, t_obj *cord)
 {
 	double	a;
 	double	b;
 	double	c;
 	double	det;
-	t_vect	vect;
 
-	vect = new_vect(cam->pos.x - obj->pos.x, cam->pos.y - obj->pos.y,
-			cam->pos.z - obj->pos.z);
-	a = pow(cam->dir.x, 2) + pow(cam->dir.y, 2) + pow(cam->dir.z, 2);
-	b = 2 * (cam->dir.x * vect.x + cam->dir.y * vect.y + cam->dir.z * vect.z);
-	c = (pow(vect.x, 2) + pow(vect.y, 2) + pow(vect.z, 2) - pow(obj->r, 2));
-	det = pow(b, 2) - (4 * a * c);
-	if (det < 0.00000001)
+	a = pow(cam->dir->x, 2) + pow(cam->dir->y, 2) + pow(cam->dir->z, 2);
+	b = 2 * (cam->dir->x * (cam->pos->x - cord->pos->x) + cam->dir->y
+			* (cam->pos->y - cord->pos->y) + cam->dir->z *
+				(cam->pos->z - cord->pos->z));
+	c = (pow((cam->pos->x - cord->pos->x), 2) + pow((cam->pos->y -
+		cord->pos->y), 2) + pow((cam->pos->z - cord->pos->z), 2) -
+			pow(cord->r, 2));
+	if (a == 0.25)
+		det = pow(b, 2) - c;
+	else
+		det = pow(b, 2) - (4 * a * c);
+	if (det <= 0)
 		return (0);
 	v->dist1 = (-b + sqrt(det)) / (2 * a);
 	v->dist2 = (-b - sqrt(det)) / (2 * a);
@@ -40,9 +44,9 @@ t_vect		calc_sphere_norm(t_obj *obj, t_vect impact)
 {
 	t_vect	norm;
 
-	norm = new_vect(obj->pos.x - impact.x, obj->pos.y - impact.y, obj->pos.z -
-			impact.z);
-	norm = normalize(norm);
+	norm = new_vect(impact.x - obj->pos->x, impact.y - obj->pos->y, impact.z -
+			obj->pos->z);
+	norm = normalize(&norm);
 	return (norm);
 }
 /*
@@ -81,7 +85,7 @@ int		check_sphere(t_obj *cam, t_calc *v, t_obj *obj)
 		if (v->dist2 <= dist)
 			dist = v->dist2;
 	}
-	if (dist == 0)
+	if (dist == 0 || (v->t <= dist && v->t > 0.00000001))
 		return (0);
 	v->t = dist;
 	return (1);
