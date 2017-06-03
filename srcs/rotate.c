@@ -60,7 +60,6 @@ t_vect	inv_rotation(t_vect vect, t_vect angle)
 {
 	t_vect	ret;
 
-	if (
 	ret = rot_x(vect, -(angle.x));
 	ret = rot_y(ret, -(angle.y));
 	ret = rot_z(ret, -(angle.z));

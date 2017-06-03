@@ -11,10 +11,6 @@ LIGHT
 	color = (1, 1, 1)
 
 LIGHT
-	position = (0, 90, 100)
-	color = (1, 1, 1)
-
-LIGHT
 	position = (-40, 20, 150)
 	color = (1, 1, 1)
 
@@ -51,9 +47,10 @@ SPHERE
 	color = (45, 250, 140)
 
 CYLINDER
-	position = (0, 15, 150)
+	position = (0, 30, 150)
 	rayon = 3
 	rotation = (0, 0, 90)
+
 
 CYLINDER
 	position = (40, 30, 100)
@@ -87,10 +84,9 @@ Parser bugs :
 
 - argument detecte vide
 - autre que argument passe
-- color des lights a fix intensite lumiere
 - limite lumieres
 - detecte pas la fin de fichier
-- titre faute orthographe
+- regler les max int
 
 Parametres direction pour plan, equivalent en murs :
 GROUND (sol)

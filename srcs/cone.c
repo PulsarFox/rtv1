@@ -13,6 +13,7 @@
 #include "rtv1.h"
 #include <math.h>
 #include <stdio.h>
+#include "libft.h"
 
 static int		calc_cone(t_obj *cam, t_calc *v, t_obj *obj)
 {
@@ -38,6 +39,27 @@ static int		calc_cone(t_obj *cam, t_calc *v, t_obj *obj)
 		return (0);
 	v->dist1 = (-b + sqrt(det)) / (2 * a);
 	v->dist2 = (-b - sqrt(det)) / (2 * a);
+	return (1);
+}
+
+int		parse_cone(int fd, t_obj *obj)
+{
+	char	*line;
+
+	obj->obj_type = CONE;
+	set_null(obj);
+	while (get_next_line(fd, &line) == 1 && check_type(line) != LINE)
+	{
+		if (check_type(line) == SPACE || check_type(line) == PARAMETER)
+			read_line(line, obj);
+		else if (check_type(line) == DELIMITER)
+			return (2);
+		else if (check_type(line) == TITLE)
+			ft_syntax_error(line, 1);
+		free(line);
+	}
+	obj->r = tan(obj->r * (M_PI / 180));
+	free(line);
 	return (1);
 }
 

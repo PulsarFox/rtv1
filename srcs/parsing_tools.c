@@ -68,51 +68,27 @@ char	**get_conf(char *line, char c1, char c2)
 	return (conf);
 }
 
-static	void	get_second_type(char *line, t_obj *obj)
+static int	verif_nbrarg(char *str)
 {
-	if (ft_strstr(line, "RWALL"))
-	{
-		obj->dir.x = 1;
-		obj->dir.y = 0;
-		obj->dir.z = 0;
-	}
-	else if (ft_strstr(line, "ROOF"))
-	{
-		obj->dir.x = 0;
-		obj->dir.y = 1;
-		obj->dir.z = 0;
-	}
-	else
-	{
-		ft_putstr("Invalid direction at line\n");
-		ft_putstr(line);
-		ft_putchar('\n');
-		exit(1);
-	}
-}
+	size_t	i;
+	size_t	len;
 
-void		get_dir_type(char *line, t_obj *obj)
-{
-	if (ft_strstr(line, "BWALL"))
+	i = 0;
+	len = ft_strlen(str);
+	while (str[i] != '\0' && str[i] != '=')
+		i++;
+	if (i == len)
+		ft_syntax_error(str, 0);
+	while (str[i] != '\0')
 	{
-		obj->dir.x = 0;
-		obj->dir.y = 0;
-		obj->dir.z = 1;
+		if (ft_isdigit(str[i]))
+			return (1);
+		i++;
 	}
-	else if (ft_strstr(line, "GROUND"))
-	{
-		obj->dir.x = 0;
-		obj->dir.y = -1;
-		obj->dir.z = 0;
-	}
-	else if (ft_strstr(line, "LWALL"))
-	{
-		obj->dir.x = -1;
-		obj->dir.y = 0;
-		obj->dir.z = 0;
-	}
-	else
-		get_second_type(line, obj);
+	ft_putstr("Invalid input :\n");
+	ft_putstr(str);
+	ft_putchar('\n');
+	exit(1);
 }
 
 int		get_nbr(char *str)
@@ -124,6 +100,7 @@ int		get_nbr(char *str)
 
 	i = 0;
 	j = 0;
+	verif_nbrarg(str);
 	while (str[i] != '\0' && !ft_isdigit(str[i]))
 		i++;
 	while (str[i++] != '\0' && ft_isdigit(str[i]))

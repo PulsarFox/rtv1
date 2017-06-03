@@ -15,6 +15,26 @@
 #include "libft.h"
 #include <stdio.h>
 
+int		parse_sphere(int fd, t_obj *obj)
+{
+	char	*line;
+
+	obj->obj_type = SPHERE;
+	set_null(obj);
+	while (get_next_line(fd, &line) == 1 && check_type(line) != LINE)
+	{
+		if (check_type(line) == PARAMETER)
+			read_line(line, obj);
+		else if (check_type(line) == DELIMITER)
+			return (2);
+		else if (check_type(line) == TITLE)
+			ft_syntax_error(line, 1);
+		free(line);
+	}
+	free(line);
+	return (1);
+}
+
 static int		calc_sphere(t_obj *cam, t_calc *v, t_obj *obj)
 {
 	double	a;
@@ -45,28 +65,7 @@ t_vect		calc_sphere_norm(t_obj *obj, t_vect impact)
 	norm = normalize(norm);
 	return (norm);
 }
-/*
-int		check_sphere(t_obj *cam, t_calc *v, t_obj *obj)
-{
-	double	dist;
 
-	if (!calc_sphere(cam, v, obj))
-		return (0);
-	if (v->dist1 < 0.00000001 && v->dist2 < 0.00000001)
-		return (0);
-	if (v->dist1 > 0.00000001 && v->dist2 > 0.00000001)
-	{
-		dist = v->dist2;
-		if (v->dist1 < v->dist2)
-			dist = v->dist1;
-		if (v->t <= dist && v->t > 0.00000001)
-			return (0);
-		v->t = dist;
-		return (1);
-	}
-	return (0);
-}
-*/
 int		check_sphere(t_obj *cam, t_calc *v, t_obj *obj)
 {
 	double	dist;

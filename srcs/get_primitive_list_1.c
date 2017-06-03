@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
+
 int		parse_camera(int fd, t_obj *obj)
 {
 	char	*line;
@@ -23,17 +24,17 @@ int		parse_camera(int fd, t_obj *obj)
 	set_null(obj);
 	while (get_next_line(fd, &line) == 1 && check_type(line) != LINE)
 	{
-		if (check_type(line) == SPACE || check_type(line) == PARAMETER)
+		if (check_type(line) == PARAMETER)
 			read_line(line, obj);
-		obj->dir.x = 0;
-		obj->dir.y = 0;
-		obj->dir.z = 1;
 		if (check_type(line) == DELIMITER)
 			return (2);
 		else if (check_type(line) == TITLE)
 			ft_syntax_error(line, 1);
 		free(line);
 	}
+	obj->dir.x = 0;
+	obj->dir.y = 0;
+	obj->dir.z = 1;
 	free(line);
 	return (1);
 }
@@ -46,7 +47,7 @@ int		parse_light(int fd, t_obj *obj)
 	set_null(obj);
 	while (get_next_line(fd, &line) == 1 && check_type(line) != LINE)
 	{
-		if (check_type(line) == SPACE || check_type(line) == PARAMETER)
+		if (check_type(line) == PARAMETER)
 			read_line(line, obj);
 		else if (check_type(line) == DELIMITER)
 			return (2);
@@ -54,67 +55,16 @@ int		parse_light(int fd, t_obj *obj)
 			ft_syntax_error(line, 1);
 		free(line);
 	}
-	free(line);
-	return (1);
-}
-
-int		parse_sphere(int fd, t_obj *obj)
-{
-	char	*line;
-
-	obj->obj_type = SPHERE;
-	set_null(obj);
-	while (get_next_line(fd, &line) == 1 && check_type(line) != LINE)
+	if (obj->r > 10 || obj->r < 0)
 	{
-		if (check_type(line) == SPACE || check_type(line) == PARAMETER)
-			read_line(line, obj);
-		else if (check_type(line) == DELIMITER)
-			return (2);
-		else if (check_type(line) == TITLE)
-			ft_syntax_error(line, 1);
-		free(line);
+		ft_putstr("The intensity value must be between 0 and 10\n");
+		exit(1);
 	}
+	obj->color.x = (obj->color.x * (obj->r / 10)) / 255;
+	obj->color.y = (obj->color.y * (obj->r / 10)) / 255;
+	obj->color.z = (obj->color.z * (obj->r / 10)) / 255;
 	free(line);
 	return (1);
 }
 
-int		parse_plan(int fd, t_obj *obj)
-{
-	char	*line;
 
-	obj->obj_type = PLAN;
-	set_null(obj);
-	while (get_next_line(fd, &line) == 1 && check_type(line) != LINE)
-	{
-		if (check_type(line) == SPACE || check_type(line) == PARAMETER)
-			read_line(line, obj);
-		else if (check_type(line) == DELIMITER)
-			return (2);
-		else if (check_type(line) == TITLE)
-			ft_syntax_error(line, 1);
-		free(line);
-	}
-	free(line);
-	return (1);
-}
-
-int		parse_cone(int fd, t_obj *obj)
-{
-	char	*line;
-
-	obj->obj_type = CONE;
-	set_null(obj);
-	while (get_next_line(fd, &line) == 1 && check_type(line) != LINE)
-	{
-		if (check_type(line) == SPACE || check_type(line) == PARAMETER)
-			read_line(line, obj);
-		else if (check_type(line) == DELIMITER)
-			return (2);
-		else if (check_type(line) == TITLE)
-			ft_syntax_error(line, 1);
-		free(line);
-	}
-	obj->r = tan(obj->r * (M_PI / 180));
-	free(line);
-	return (1);
-}

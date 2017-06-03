@@ -38,13 +38,12 @@ int		main(int argc, char **argv)
 	t_obj		*tmp;
 	int			fd;
 
-	(void)argv;
 	if (argc != 2)
 		ft_args_error("", 0);
 	if ((fd = open(argv[1], O_RDONLY)) == -1)
 		ft_args_error(argv[1], 1);
 	if ((calc = (t_calc*)malloc(sizeof(t_calc))) == NULL)
-		return (0);
+		ft_malloc_error();
 	parser(fd, &obj);
 	tmp = obj;
 	e = init_env();
@@ -53,7 +52,6 @@ int		main(int argc, char **argv)
 		printf("coord = %f, %f, %f. type = %d. r = %f, dir = %f, %f, %f, color = %f, %f, %f\n", tmp->pos.x, tmp->pos.y, tmp->pos.z, tmp->obj_type, tmp->r, tmp->dir.x, tmp->dir.y, tmp->dir.z, tmp->color.x, tmp->color.y, tmp->color.z);
 		tmp = tmp->next;
 	}
-	calc->imp = (t_vect *)malloc(sizeof(t_vect));
 	raytracer(e, calc, obj);
 	mlx_put_image_to_window(e->mlx, e->win, e->img, 0, 0);
 	mlx_key_hook(e->win, key_hook, e);

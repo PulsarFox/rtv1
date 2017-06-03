@@ -82,6 +82,7 @@ typedef struct		s_obj
 	char			*name;
 	t_vect			dir;
 	t_vect			rot;
+	t_vect			tr;
 	t_vect			color;
 	struct s_obj	*next;
 }					t_obj;
@@ -110,6 +111,7 @@ int					calc_shadow(t_obj *lht, t_calc *v, t_obj *cur, t_obj *cam);
 void				set_color(t_calc *v, double i);
 t_vect				rotation(t_vect vect, t_vect angle);
 t_vect				inv_rotation(t_vect vect, t_vect angle);
+void				set_translation(t_obj *obj, t_vect vect);
 /*
 ** CHECKERS
 */
@@ -128,6 +130,8 @@ int					parse_cone(int fd, t_obj *obj);
 int					parse_cylinder(int fd, t_obj *obj);
 void				set_null(t_obj *obj);
 void				verif_standarts(t_obj **obj);
+void				free_conf(char **tab);
+int					valid_line(char *str, char c1, char c2);
 
 /*
 ** ERRORS

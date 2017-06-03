@@ -54,7 +54,7 @@ void	ft_args_error(char *str, int i)
 		ft_putstr(str);
 		ft_putchar('\n');
 	}
-	ft_putstr("USAGE : ./rtv1 <filename.sc>\n");
+	ft_putstr("USAGE :\n./rtv1 <filename.sc>\n");
 	exit(1);
 }
 
@@ -63,6 +63,7 @@ void	ft_file_error(int i)
 	if (i == CAMERA)
 	{
 		ft_putstr("THE SCENE MUST HAVE ONE AND ONLY ONE CAMERA\n");
+		ft_putstr("And the camera must be defined before everything\n");
 		exit(1);
 	}
 	else if (i == LIGHT)

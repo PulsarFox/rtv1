@@ -23,7 +23,7 @@ SRCS_DIR = ./srcs/
 SRCS_NAME = rtv1.c raytracer.c init_shapes.c keys.c sphere.c plan.c light.c \
 			parser.c checkers.c get_primitive_list_1.c get_primitive_list_2.c \
 			parsing_reader.c parsing_tools.c errors.c verif_list.c cylinder.c \
-			cone.c vect_calc.c rotate.c shadow.c
+			cone.c vect_calc.c rotate.c shadow.c init.c free.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAME))
 OBJS=$(SRCS:.c=.o)
@@ -36,7 +36,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@make -C libft/
-	@$(CC) -o $(NAME) $(OBJS) $(LIBFT) $(MLXFLAGS) -I $(HEADERS)
+	@$(CC) -o $(NAME) $(OBJS) $(LIBFT) $(MLXFLAGS) -I $(HEADERS) -L ./minilibx_macos
 	@echo "Executable $(NAME) cree with $(CFLAGS)"
 
 debug: CFLAGS += -g

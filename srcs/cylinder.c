@@ -14,6 +14,27 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "libft.h"
+
+int		parse_cylinder(int fd, t_obj *obj)
+{
+	char	*line;
+
+	obj->obj_type = CYLINDER;
+	set_null(obj);
+	while (get_next_line(fd, &line) == 1 && check_type(line) != LINE)
+	{
+		if (check_type(line) == SPACE || check_type(line) == PARAMETER)
+			read_line(line, obj);
+		else if (check_type(line) == DELIMITER)
+			return (2);
+		else if (check_type(line) == TITLE)
+			ft_syntax_error(line, 1);
+		free(line);
+	}
+	free(line);
+	return (1);
+}
 
 static int		calc_cylinder(t_obj *obj, t_obj *rcam, t_calc *v)
 {
@@ -50,19 +71,7 @@ t_vect		calc_cylinder_norm(t_obj *obj, t_vect impact)
 	base = rotation(obj->pos, obj->rot);
 	//base = copy_vect(obj->pos);
 	norm = new_vect(base.x - tmp.x, 0, base.z - tmp.z);
-	norm = normalize(norm);/*
-	if (norm.x > 0)
-	{
-		obj->color.x = 255;
-		obj->color.y = 255;
-		obj->color.z = 255;
-	}
-	else
-	{
-		obj->color.x = 244;
-		obj->color.y = 30;
-		obj->color.z = 80;
-	}*/
+	norm = normalize(norm);
 	norm = inv_rotation(norm, obj->rot);
 	return (norm);
 }

@@ -16,44 +16,24 @@
 #include <stdio.h>
 #include <math.h>
 
-void	free_conf(char **tab)
+static void		read_line_four(char *line, t_obj *obj)
 {
-	int		i;
+	char	**conf;
 
-	i = 0;
-	while (tab[i] != NULL)
+	if (ft_strstr(line, "point_at"))
 	{
-		free(tab[i]);
-		i++;
+		valid_line(line, '(', ')');
+		conf = get_conf(line, '(', ')');
+		obj->rot.x = ft_atoi(conf[0]);
+		obj->rot.y = ft_atoi(conf[1]);
+		obj->rot.z = ft_atoi(conf[2]);
+		free_conf(conf);
+		free(conf);
 	}
-}
-
-int		valid_line(char *str, char c1, char c2)
-{
-	int		i;
-	int		index;
-	int		j;
-	int		kezack;
-
-	i = 0;
-	index = 0;
-	j = 0;
-	kezack = 0;
-	if (c1 == c2)
-		kezack = 1;
-	while (str[i] != '\0')
-	{
-		if (str[i] == c1)
-			index++;
-		if (str[i] == c2)
-			j++;
-		i++;
-	}
-	if ((index == 0 || j == 0) || (kezack == 1 && index % 2 != 0))
-		ft_syntax_error(str, 0);
-	if ((index != j || index >= 2 || j >= 2) && kezack == 0)
-		ft_syntax_error(str, 0);
-	return (1);
+	else if (ft_strstr(line, "intensity"))
+		obj->r = get_nbr(line);
+	else if (obj->obj_type != LIGHT && ft_strstr(line, "angle"))
+		obj->r = get_nbr(line);
 }
 
 static void		read_line_two(char *line, t_obj *obj)
@@ -71,7 +51,7 @@ static void		read_line_two(char *line, t_obj *obj)
 		free_conf(conf);
 		free(conf);
 	}
-	else if (ft_strstr(line, "direction"))
+	else if (ft_strstr(line, "type"))
 		get_dir_type(line, obj);
 	else if (ft_strstr(line, "name"))
 	{
@@ -98,9 +78,9 @@ static void		read_line_three(char *line, t_obj *obj, char **conf)
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->pos.x = obj->pos.x + ft_atoi(conf[0]);
-		obj->pos.y = obj->pos.y + ft_atoi(conf[1]);
-		obj->pos.z = obj->pos.z + ft_atoi(conf[2]);
+		obj->tr.x = ft_atoi(conf[0]);
+		obj->tr.y = ft_atoi(conf[1]);
+		obj->tr.z = ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}
@@ -121,11 +101,12 @@ void	read_line(char *line, t_obj *obj)
 		free_conf(conf);
 		free(conf);
 	}
-	else if (ft_strstr(line, "rayon"))
+	else if (obj->obj_type != LIGHT && ft_strstr(line, "rayon"))
 		obj->r = get_nbr(line);
 	else
 	{
 		read_line_two(line, obj);
 		read_line_three(line, obj, conf);
+		read_line_four(line, obj);
 	}
 }

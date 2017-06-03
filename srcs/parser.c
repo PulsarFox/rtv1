@@ -47,10 +47,15 @@ static	void	verif_obj(t_obj *obj)
 		ft_putstr("Rayon must be superior to 0\n");
 		exit(1);
 	}
-	if ((obj->obj_type == PLAN || obj->obj_type == CAMERA) &&
-			obj->dir.x == 0 && obj->dir.y == 0 && obj->dir.z == 0)
+	if (obj->obj_type == CONE && obj->r <= 0)
 	{
-		ft_putstr("A camera/plan direction is missing\n");
+		ft_putstr("The angle must be superior to 0\n");
+		exit(1);
+	}
+	if (obj->obj_type == PLAN && obj->dir.x == 0 && obj->dir.y == 0 &&
+		obj->dir.z == 0)
+	{
+		ft_putstr("A plan type is missing\n");
 		exit(1);
 	}
 }
@@ -62,7 +67,6 @@ int		parse_objects(char *line, t_obj **obj, int fd, int index)
 
 	new = newobj();
 	ret = 1;
-	printf("%d\n", index);
 	if (ft_strcmp(line, "CAMERA") == 0)
 		ret = parse_camera(fd, new);
 	else if (ft_strcmp(line, "LIGHT") == 0)
@@ -79,6 +83,7 @@ int		parse_objects(char *line, t_obj **obj, int fd, int index)
 		return (1);
 	new->index = index;
 	verif_obj(new);
+	set_translation(new, new->tr);
 	objaddend(obj, new);
 	return (ret);
 }
@@ -87,26 +92,21 @@ void	parser(int fd, t_obj **obj)
 {
 	char	*line;
 	int		endf;
-	int		line_type;
 	int		index;
 
-	line_type = 0;
 	endf = 0;
 	index = 0;
 	while (get_next_line(fd, &line) == 1)
 	{
-		line_type = check_type(line);
-		if (line_type == DELIMITER)
-			endf++;
-		if (endf == 0 && line_type != COMMENT)
-			ft_delimitor_error(1);
-		if (endf == 1 && line_type == TITLE)
+		if (line[0] != '\0' && (same_char_line(line, '*') || endf == 1))
 		{
-			index++;
-			endf = parse_objects(line, obj, fd, index);
+			endf = 1;
+			if (check_type(line) == TITLE)
+			{
+				index++;
+				endf = parse_objects(line, obj, fd, index);
+			}
 		}
-		if (endf >= 2)
-			break;
 		free(line);
 	}
 	if (endf == 0)
