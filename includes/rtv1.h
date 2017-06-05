@@ -38,6 +38,9 @@ typedef struct		s_env
 	int				bpp;
 	int				s_l;
 	int				endian;
+	double			v_pWidth;
+	double			v_pHeight;
+	double			v_pDist;
 }					t_env;
 
 typedef struct		s_vect
@@ -55,17 +58,14 @@ typedef struct		s_calc
 	t_vect			dir;
 	t_vect			pos;
 	t_vect			*imp;
+	t_vect			pix_origin;
+	t_vect			right;
+	t_vect			up;
 	double			dist1;
 	double			dist2;
 	double			red;
 	double			blue;
 	double			green;
-	double			v_pWidth;
-	double			v_pHeight;
-	double			v_pDist;
-	t_vect			pix_origin;
-	t_vect			right;
-	t_vect			up;
 	double			xind;
 	double			yind;
 	double			theta;
@@ -88,6 +88,7 @@ typedef struct		s_obj
 }					t_obj;
 
 void				raytracer(t_env *e, t_calc *v, t_obj *obj);
+t_env				*init_env(void);
 int					key_hook(int keycode, t_env *e);
 int					check_sphere(t_obj *cam, t_calc *v, t_obj *coord);
 int					check_plan(t_obj *cam, t_calc *v, t_obj *coord);
@@ -112,6 +113,7 @@ void				set_color(t_calc *v, double i);
 t_vect				rotation(t_vect vect, t_vect angle);
 t_vect				inv_rotation(t_vect vect, t_vect angle);
 void				set_translation(t_obj *obj, t_vect vect);
+void				init_plan_normal(t_obj **obj);
 /*
 ** CHECKERS
 */
@@ -146,5 +148,9 @@ double				dot_product(t_vect v1, t_vect v2);
 t_vect				normalize(t_vect vect);
 t_vect				copy_vect(t_vect vect);
 t_vect				new_vect(double x, double y, double z);
+t_vect				diff_vect(t_vect a, t_vect b);
+t_vect				vect_mult(t_vect a, t_vect b);
+t_vect				rot_camx(t_vect a, t_vect b);
+t_vect				rot_camy(t_vect a, t_vect b);
 
 #endif

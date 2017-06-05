@@ -43,8 +43,7 @@ static int		calc_sphere(t_obj *cam, t_calc *v, t_obj *obj)
 	double	det;
 	t_vect	vect;
 
-	vect = new_vect(cam->pos.x - obj->pos.x, cam->pos.y - obj->pos.y,
-			cam->pos.z - obj->pos.z);
+	vect = diff_vect(cam->pos, obj->pos);
 	a = pow(cam->dir.x, 2) + pow(cam->dir.y, 2) + pow(cam->dir.z, 2);
 	b = 2 * (cam->dir.x * vect.x + cam->dir.y * vect.y + cam->dir.z * vect.z);
 	c = (pow(vect.x, 2) + pow(vect.y, 2) + pow(vect.z, 2) - pow(obj->r, 2));
@@ -60,8 +59,7 @@ t_vect		calc_sphere_norm(t_obj *obj, t_vect impact)
 {
 	t_vect	norm;
 
-	norm = new_vect(obj->pos.x - impact.x, obj->pos.y - impact.y, obj->pos.z -
-			impact.z);
+	norm = diff_vect(obj->pos, impact);
 	norm = normalize(norm);
 	return (norm);
 }

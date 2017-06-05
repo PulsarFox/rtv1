@@ -32,9 +32,6 @@ int		parse_camera(int fd, t_obj *obj)
 			ft_syntax_error(line, 1);
 		free(line);
 	}
-	obj->dir.x = 0;
-	obj->dir.y = 0;
-	obj->dir.z = 1;
 	free(line);
 	return (1);
 }

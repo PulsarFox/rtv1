@@ -6,7 +6,7 @@ double		dot_product(t_vect v1, t_vect v2)
 {
 	double	ret;
 
-	ret = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	ret = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 	return (ret);
 }
 
@@ -42,3 +42,12 @@ t_vect		new_vect(double x, double y, double z)
 	return (ret);
 }
 
+t_vect		diff_vect(t_vect a, t_vect b)
+{
+	t_vect ret;
+
+	ret.x = a.x - b.x;
+	ret.y = a.y - b.y;
+	ret.z = a.z - b.z;
+	return (ret);
+}

@@ -17,7 +17,6 @@
 
 static void		pos_calc(int x, int y, t_calc *v, t_obj *cam)
 {
-	double	norm;
 	t_vect	tmp;
 
 	v->pix.x = v->pix_origin.x + (v->right.x * v->xind * (double)x) -
@@ -26,38 +25,55 @@ static void		pos_calc(int x, int y, t_calc *v, t_obj *cam)
 		(v->up.y * v->yind * (double)y);
 	v->pix.z = v->pix_origin.z + (v->right.z * v->xind * (double)x) -
 		(v->up.z * v->yind * (double)y);
-	tmp.x = v->pix.x - cam->pos.x;
-	tmp.y = v->pix.y - cam->pos.y;
-	tmp.z = v->pix.z - cam->pos.z;
-	norm = 1 / sqrt(dot_product(tmp, tmp));
-	cam->dir.x = tmp.x * norm;
-	cam->dir.y = tmp.y * norm;
-	cam->dir.z = tmp.z * norm;
+	tmp = diff_vect(v->pix, cam->pos);
+	cam->dir = normalize(tmp);
+}
+
+static	void	init_viewplane(t_env *e, t_obj *cam, t_calc *v, t_vect dir)
+{
+	v->pix_origin.x = cam->pos.x + ((dir.x * e->v_pDist)
+			+ (v->up.x * (e->v_pHeight / 2.0)))
+				- (v->right.x * (e->v_pWidth / 2.0));
+	v->pix_origin.y = cam->pos.y + ((dir.y * e->v_pDist)
+			+ (v->up.y * (e->v_pHeight / 2.0)))
+				- (v->right.y * (e->v_pWidth / 2.0));
+	v->pix_origin.z = cam->pos.z + ((dir.z * e->v_pDist)
+			+ (v->up.z * (e->v_pHeight / 2.0)))
+				- (v->right.z * (e->v_pWidth / 2.0));
+	v->xind = (e->v_pWidth / (double)e->width);
+	v->yind = (e->v_pHeight / (double)e->height);
 }
 
 static void		init_pos(t_env *e, t_obj *cam, t_calc *v)
 {
 	t_vect	dir;
+	t_vect	tmp1;
+	t_vect	tmp2;
 
-	dir = rotation(cam->dir, cam->rot);
-	v->right = new_vect(1, 0, 0);
-	v->right = rotation(v->right, cam->rot);
-	v->up = new_vect(0, 1, 0);
-	v->up = rotation(v->up, cam->rot);
-	v->v_pWidth = 0.5;
-	v->v_pHeight = ((double)e->height * v->v_pWidth) / (double)e->width;
-	v->v_pDist = 0.5;
-	v->pix_origin.x = cam->pos.x + ((dir.x * v->v_pDist)
-			+ (v->up.x * (v->v_pHeight / 2.0)))
-				- (v->right.x * (v->v_pWidth / 2.0));
-	v->pix_origin.y = cam->pos.y + ((dir.y * v->v_pDist)
-			+ (v->up.y * (v->v_pHeight / 2.0)))
-				- (v->right.y * (v->v_pWidth / 2.0));
-	v->pix_origin.z = cam->pos.z + ((dir.z * v->v_pDist)
-			+ (v->up.z * (v->v_pHeight / 2.0)))
-				- (v->right.z * (v->v_pWidth / 2.0));
-	v->xind = (v->v_pWidth / (double)e->width);
-	v->yind = (v->v_pHeight / (double)e->height);
+	tmp1 = new_vect(0.0, 1.0, 0.0);
+	tmp2 = new_vect(1.0, 0.0, 0.0);
+	dir = diff_vect(cam->dir, cam->pos);
+	dir = normalize(dir);
+	v->right = vect_mult(tmp1, dir);
+	if (v->right.x == 0 && v->right.y == 0 && v->right.z == 0)
+		v->right.x = 1;
+	v->right = normalize(v->right);
+	v->up = vect_mult(dir, tmp2);
+	if (v->up.x == 0 && v->up.y == 0 && v->up.z == 0)
+		v->up.y = 1;
+	if (v->right.x < 0.999999 && v->right.x > -0.999999)
+		v->up = rot_camx(v->up, dir);
+	v->up = normalize(v->up);
+	if (v->up.y < -0.00000001)
+	{
+		v->up.z = -v->up.z;
+		v->up.y = -v->up.y;
+		v->right = rot_camy(v->right, dir);
+		v->right = normalize(v->right);
+		v->right.x = -v->right.x;
+		v->right.z = -v->right.z;
+	}
+	init_viewplane(e, cam, v, dir);
 }
 
 static t_obj	*get_camera(t_obj *obj, t_env *e, t_calc *v)
@@ -78,19 +94,6 @@ static t_obj	*get_camera(t_obj *obj, t_env *e, t_calc *v)
 		ft_file_error(CAMERA);
 	init_pos(e, cam, v);
 	return (cam);
-}
-
-static	void	init_plan_normal(t_obj **obj)
-{
-	t_obj	*tmp;
-
-	tmp = *obj;
-	while (tmp)
-	{
-		if (tmp->obj_type == PLAN)
-			tmp->dir = calc_plan_norm(tmp);
-		tmp = tmp->next;
-	}
 }
 
 void	raytracer(t_env *e, t_calc *v, t_obj *obj)

@@ -23,7 +23,7 @@ SRCS_DIR = ./srcs/
 SRCS_NAME = rtv1.c raytracer.c init_shapes.c keys.c sphere.c plan.c light.c \
 			parser.c checkers.c get_primitive_list_1.c get_primitive_list_2.c \
 			parsing_reader.c parsing_tools.c errors.c verif_list.c cylinder.c \
-			cone.c vect_calc.c rotate.c shadow.c init.c free.c
+			cone.c vect_calc.c rotate.c shadow.c init.c free.c cam_rot.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAME))
 OBJS=$(SRCS:.c=.o)

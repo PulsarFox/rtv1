@@ -15,20 +15,6 @@
 #include <mlx.h>
 #include <fcntl.h>
 #include <stdio.h>
-t_env	*init_env(void)
-{
-	t_env	*e;
-
-	if ((e = (t_env*)malloc(sizeof(t_env))) == NULL)
-		ft_malloc_error();
-	e->height = 600;
-	e->width = 800;
-	e->mlx = mlx_init();
-	e->win = mlx_new_window(e->mlx, e->width, e->height, "rtv1");
-	e->img = mlx_new_image(e->mlx, e->width, e->height);
-	e->data = mlx_get_data_addr(e->img, &e->bpp, &e->s_l, &e->endian);
-	return (e);
-}
 
 int		main(int argc, char **argv)
 {

@@ -20,13 +20,13 @@ static void		read_line_four(char *line, t_obj *obj)
 {
 	char	**conf;
 
-	if (ft_strstr(line, "point_at"))
+	if (obj->obj_type == CAMERA && ft_strstr(line, "point_at"))
 	{
 		valid_line(line, '(', ')');
 		conf = get_conf(line, '(', ')');
-		obj->rot.x = ft_atoi(conf[0]);
-		obj->rot.y = ft_atoi(conf[1]);
-		obj->rot.z = ft_atoi(conf[2]);
+		obj->dir.x = ft_atoi(conf[0]);
+		obj->dir.y = ft_atoi(conf[1]);
+		obj->dir.z = ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
 	}
