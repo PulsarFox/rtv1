@@ -1,31 +1,43 @@
+adasdas
+	 
+	 asfkj
+
+	sad
+	bite
+23423
+
+BITE
+
+CAMERA
 **********************
-##############
 CAMERA
 	position = (0, 10, -50)
 	point_at = (0, 5, 100)
-##############
 --------------
 
 LIGHT
-	position = (0, 80, 50)
+	position = (15, 80, -150)
 	color = (255, 255, 255)
 	intensity = 10
 ------------------
 
 SPHERE
-	position = (0, 5, 100)
-	rayon = 10
-	color = (255, 0, 0)
+	position = (0, 0, 0)
+	color = (255, 130, 255)
+	rayon = 5
 ------------------
 
-PLAN
-	position = (0, -5, 0)
-	type = GROUND
-	color = (0, 255, 0)
+CYLINDER
+	position = (0, 0, 0)
+	color = (255, 255, 255)
 -----------------
+******************
 
-PLAN
-	position = (0, 0, 200)
-	type = BWALL
-	color = (255, 140, 255)
-************************
+aksjflsakjf
+asfkj
+asfkjas;kfjas
+
+
+	
+
+	asdasd

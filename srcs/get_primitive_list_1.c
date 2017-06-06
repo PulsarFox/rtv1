@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 18:47:31 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/24 16:37:37 by savincen         ###   ########.fr       */
+/*   Updated: 2017/06/06 14:45:03 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,25 @@
 int		parse_camera(int fd, t_obj *obj)
 {
 	char	*line;
+	int		k;
 
+	k = 0;
 	obj->obj_type = CAMERA;
 	set_null(obj);
 	while (get_next_line(fd, &line) == 1 && check_type(line) != LINE)
 	{
 		if (check_type(line) == PARAMETER)
-			read_line(line, obj);
-		if (check_type(line) == DELIMITER)
-			return (2);
+			k = k + read_line(line, obj);
 		else if (check_type(line) == TITLE)
 			ft_syntax_error(line, 1);
 		free(line);
+	}
+	if (check_type(line) == DELIMITER)
+		return (2);
+	if (k == 0)
+	{
+		ft_putstr("A camera direction point must be given\n");
+		exit(1);
 	}
 	free(line);
 	return (1);

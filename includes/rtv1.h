@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 18:35:53 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/30 18:16:07 by savincen         ###   ########.fr       */
+/*   Updated: 2017/06/06 15:03:47 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ char				**get_conf(char *line, char c1, char c2);
 char				*get_between_cs(char *str, char c1, char c2);
 int					get_nbr(char *str);
 void				get_dir_type(char *line, t_obj *obj);
-void				read_line(char *line, t_obj *obj);
+int					read_line(char *line, t_obj *obj);
 int					parse_camera(int fd, t_obj *obj);
 int					parse_light(int fd, t_obj *obj);
 int					parse_plan(int fd, t_obj *obj);
@@ -134,6 +134,7 @@ void				set_null(t_obj *obj);
 void				verif_standarts(t_obj **obj);
 void				free_conf(char **tab);
 int					valid_line(char *str, char c1, char c2);
+void				verif_args(t_obj *lstobj);
 
 /*
 ** ERRORS

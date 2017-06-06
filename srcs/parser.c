@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 20:25:05 by savincen          #+#    #+#             */
-/*   Updated: 2017/05/24 18:42:57 by savincen         ###   ########.fr       */
+/*   Updated: 2017/06/06 15:15:39 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "rtv1.h"
 #include "libft.h"
 #include <stdio.h>
-t_obj	*newobj(void)
+static t_obj	*newobj(void)
 {
 	t_obj	*new;
 
@@ -25,7 +25,7 @@ t_obj	*newobj(void)
 	return (new);
 }
 
-void	objaddend(t_obj **obj, t_obj *new)
+static void	objaddend(t_obj **obj, t_obj *new)
 {
 	t_obj *tmp;
 
@@ -42,7 +42,9 @@ void	objaddend(t_obj **obj, t_obj *new)
 
 static	void	verif_obj(t_obj *obj)
 {
-	if ((obj->obj_type == CYLINDER || obj->obj_type == SPHERE) && obj->r <= 0)
+	printf("obj-> %d, r = %f\n", obj->obj_type, obj->r);
+	if ((obj->obj_type == CYLINDER || obj->obj_type == SPHERE) &&
+			obj->r < -0.000000001)
 	{
 		ft_putstr("Rayon must be superior to 0\n");
 		exit(1);
@@ -60,7 +62,7 @@ static	void	verif_obj(t_obj *obj)
 	}
 }
 
-int		parse_objects(char *line, t_obj **obj, int fd, int index)
+static int		parse_objects(char *line, t_obj **obj, int fd)
 {
 	t_obj	*new;
 	int		ret;
@@ -81,9 +83,9 @@ int		parse_objects(char *line, t_obj **obj, int fd, int index)
 		ret = parse_cylinder(fd, new);
 	else
 		return (1);
-	new->index = index;
 	verif_obj(new);
 	set_translation(new, new->tr);
+	verif_args(new);
 	objaddend(obj, new);
 	return (ret);
 }
@@ -98,18 +100,20 @@ void	parser(int fd, t_obj **obj)
 	index = 0;
 	while (get_next_line(fd, &line) == 1)
 	{
+		if (same_char_line(line, '*') && endf == 1)
+		{
+			endf = 2;
+			break;
+		}
 		if (line[0] != '\0' && (same_char_line(line, '*') || endf == 1))
 		{
 			endf = 1;
-			if (check_type(line) == TITLE)
-			{
-				index++;
-				endf = parse_objects(line, obj, fd, index);
-			}
+			if (check_type(line) == TITLE && endf == 1)
+				endf = parse_objects(line, obj, fd);
 		}
 		free(line);
 	}
-	if (endf == 0)
+	if (endf != 2)
 		ft_delimitor_error(1);
 	free(line);
 	verif_standarts(obj);

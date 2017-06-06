@@ -6,7 +6,7 @@
 /*   By: savincen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 14:40:49 by savincen          #+#    #+#             */
-/*   Updated: 2017/06/01 18:21:26 by savincen         ###   ########.fr       */
+/*   Updated: 2017/06/06 14:16:27 by savincen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <math.h>
 
-static void		read_line_four(char *line, t_obj *obj)
+static int		read_line_four(char *line, t_obj *obj)
 {
 	char	**conf;
 
@@ -29,11 +29,13 @@ static void		read_line_four(char *line, t_obj *obj)
 		obj->dir.z = ft_atoi(conf[2]);
 		free_conf(conf);
 		free(conf);
+		return (1);
 	}
-	else if (ft_strstr(line, "intensity"))
+	else if (obj->obj_type == LIGHT && ft_strstr(line, "intensity"))
 		obj->r = get_nbr(line);
-	else if (obj->obj_type != LIGHT && ft_strstr(line, "angle"))
+	else if (obj->obj_type == CONE && ft_strstr(line, "angle"))
 		obj->r = get_nbr(line);
+	return (0);
 }
 
 static void		read_line_two(char *line, t_obj *obj)
@@ -86,11 +88,13 @@ static void		read_line_three(char *line, t_obj *obj, char **conf)
 	}
 }
 
-void	read_line(char *line, t_obj *obj)
+int		read_line(char *line, t_obj *obj)
 {
 	char		**conf;
+	int			k;
 
 	conf = NULL;
+	k = 0;
 	if (ft_strstr(line, "position"))
 	{
 		valid_line(line, '(', ')');
@@ -101,12 +105,14 @@ void	read_line(char *line, t_obj *obj)
 		free_conf(conf);
 		free(conf);
 	}
-	else if (obj->obj_type != LIGHT && ft_strstr(line, "rayon"))
+	else if ((obj->obj_type == SPHERE || obj->obj_type == CYLINDER) &&
+			ft_strstr(line, "rayon"))
 		obj->r = get_nbr(line);
 	else
 	{
 		read_line_two(line, obj);
 		read_line_three(line, obj, conf);
-		read_line_four(line, obj);
+		k = read_line_four(line, obj);
 	}
+	return (k);
 }
